@@ -1,22 +1,17 @@
-import { ResponseHandler } from '../../shared/helpers/response.handler';
-import { Request, Response } from 'express';
-import Logger from '../../config/logger';
-import { UserService } from '../users/user/service';
+
+import Logger from '../../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, 
-  FetchMedicalHistoryByPatientSchema, 
-  CreateMedicalHistorySchema, 
-  UpdateMedicalHistorySchema, 
-  DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import { ApiError } from 'src/shared/utils/api.error';
+import { MedicalHistoryRepository } from '../repository';
+import { CreateMedicalHistoryValidator, UpdateMedicalHistoryValidator } from '../validation';
+
 
 const _logger = new Logger('Meidcal History');
 
 export class MedicalHistoryService {
-  static fetchMedicalHistory = async (id: number) => {
+  static fetchMedicalHistory = async (id: string) => {
     try {
-      const history = await MedicalHistoryRepository.fetchMedicalHistory(id);
+      const history = await MedicalHistoryRepository.fetchMedicalHistoryById(id);
       if (!history) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Medical history not found');
       }
@@ -27,9 +22,9 @@ export class MedicalHistoryService {
     }
   };
 
-  static fetchMedicalHistoryByPatient = async (patientId: number) => {
+  static fetchMedicalHistoryByPatient = async (patientId: string) => {
     try {
-      const histories = await MedicalHistoryRepository.fetchMedicalHistoryByPatient(patientId);
+      const histories = await MedicalHistoryRepository.fetchMedicalHistoryByPatientId(patientId);
       if (!histories) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'No medical history found for this patient');
       }
@@ -40,7 +35,20 @@ export class MedicalHistoryService {
     }
   };
 
-  static createMedicalHistory = async (request: CreateMedicalHistorySchema) => {
+  static fetchAllMedicalHistories = async () => {
+    try {
+      const histories = await MedicalHistoryRepository.fetchAllMedicalHistories();
+      if (!histories) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'No medical history found');
+      }
+      return histories;
+    } catch (error) {
+      _logger.error('[MedicalHistoryService]::Error fetching all medical history', error);
+      throw error;
+    }
+  };
+
+  static createMedicalHistory = async (request: CreateMedicalHistoryValidator) => {
     try {
       const history = await MedicalHistoryRepository.createMedicalHistory(request);
       if (!history) {
@@ -53,7 +61,7 @@ export class MedicalHistoryService {
     }
   };
 
-  static updateMedicalHistory = async (id: number, request: UpdateMedicalHistorySchema) => {
+  static updateMedicalHistory = async (id: string, request: UpdateMedicalHistoryValidator) => {
     try {
       const history = await MedicalHistoryRepository.updateMedicalHistory(id, request);
       if (!history) {
@@ -66,7 +74,7 @@ export class MedicalHistoryService {
     }
   };
 
-  static deleteMedicalHistory = async (id: number) => {
+  static deleteMedicalHistory = async (id: string) => {
     try {
       const history = await MedicalHistoryRepository.deleteMedicalHistory(id);
       if (!history) {

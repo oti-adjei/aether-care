@@ -1,21 +1,14 @@
-import { ResponseHandler } from '../../shared/helpers/response.handler';
-import { Request, Response } from 'express';
-import Logger from '../../config/logger';
-import { UserService } from '../users/user/service';
-import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, 
-  FetchMedicalHistoryByPatientSchema, 
-  CreateMedicalHistorySchema, 
-  UpdateMedicalHistorySchema, 
-  DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import { sqlQuest } from '../../../../config/database';
+import { medicalHistoryQueries } from '../queries';
+import Logger from '../../../../config/logger';
+
 
 const _logger = new Logger('Meidcal History');
 
 
 export class MedicalHistoryRepository {
-  static async createMedicalHistory(patientId: number, diagnosis: string, treatment: string, notes: string, recordedBy: number) {
+  static async createMedicalHistory(request: any) {
+    const { patientId, diagnosis, treatment, notes, recordedBy } = request;
     try {
       const medicalHistory = await sqlQuest.one(medicalHistoryQueries.createMedicalHistory, [patientId, diagnosis, treatment, notes, recordedBy]);
       return medicalHistory;
@@ -25,9 +18,9 @@ export class MedicalHistoryRepository {
     }
   }
 
-  static async fetchMedicalHistoryById(historyId: number) {
+  static async fetchMedicalHistoryById(historyId: string) {
     try {
-      const medicalHistory = await sqlQuest.oneOrNone(medicalHistoryQueries.fetchMedicalHistoryById, [historyId]);
+      const medicalHistory = await sqlQuest.oneOrNone(medicalHistoryQueries.fetchMedicalHistory, [historyId]);
       return medicalHistory;
     } catch (error) {
       _logger.error('[MedicalHistoryRepository]::Something went wrong when fetching medical history by ID', error);
@@ -35,7 +28,7 @@ export class MedicalHistoryRepository {
     }
   }
 
-  static async fetchMedicalHistoryByPatientId(patientId: number) {
+  static async fetchMedicalHistoryByPatientId(patientId: string) {
     try {
       const medicalHistories = await sqlQuest.manyOrNone(medicalHistoryQueries.fetchMedicalHistoryByPatientId, [patientId]);
       return medicalHistories;
@@ -45,7 +38,18 @@ export class MedicalHistoryRepository {
     }
   }
 
-  static async updateMedicalHistory(historyId: number, diagnosis: string | null, treatment: string | null, notes: string | null) {
+  static async fetchAllMedicalHistories() {
+    try {
+      const medicalHistories = await sqlQuest.manyOrNone(medicalHistoryQueries.fetchAllMedicalHistories);
+      return medicalHistories;
+    } catch (error) {
+      _logger.error('[MedicalHistoryRepository]::Something went wrong when fetching all medical histories', error);
+      throw error;
+    }
+  }
+
+  static async updateMedicalHistory(id: string, request: any) {
+    const { historyId, diagnosis, treatment, notes } = request;
     try {
       const updatedMedicalHistory = await sqlQuest.one(medicalHistoryQueries.updateMedicalHistory, [diagnosis, treatment, notes, historyId]);
       return updatedMedicalHistory;
@@ -55,7 +59,7 @@ export class MedicalHistoryRepository {
     }
   }
 
-  static async deleteMedicalHistory(historyId: number) {
+  static async deleteMedicalHistory(historyId: string) {
     try {
       const deletedMedicalHistory = await sqlQuest.oneOrNone(medicalHistoryQueries.deleteMedicalHistory, [historyId]);
       return deletedMedicalHistory;

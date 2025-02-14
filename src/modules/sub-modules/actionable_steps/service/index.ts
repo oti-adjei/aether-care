@@ -1,20 +1,14 @@
-import { ResponseHandler } from '../../shared/helpers/response.handler';
-import { Request, Response } from 'express';
-import Logger from '../../config/logger';
-import { UserService } from '../users/user/service';
+
 import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, 
-  FetchMedicalHistoryByPatientSchema, 
-  CreateMedicalHistorySchema, 
-  UpdateMedicalHistorySchema, 
-  DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import { ApiError } from 'src/shared/utils/api.error';
+import { ActionableStepsRepository } from '../repository';
+import Logger from '../../../../config/logger';
 
 const _logger = new Logger('Meidcal History');
 export class ActionableStepsService {
-  static createActionableStep = async (patientId: number, doctorId: number, stepDetails: string) => {
+  static createActionableStep = async (payload:any) => {
     try {
+      const {patientId,doctorId,stepDetails} = payload;
       const step = await ActionableStepsRepository.createActionableStep(patientId, doctorId, stepDetails);
       if (!step) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create actionable step');
@@ -28,7 +22,7 @@ export class ActionableStepsService {
 
   static fetchStepsByPatient = async (patientId: number) => {
     try {
-      const steps = await ActionableStepsRepository.fetchStepsByPatient(patientId);
+      const steps = await ActionableStepsRepository.fetchActionableStepsByPatient(patientId);
       if (!steps || steps.length === 0) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'No actionable steps found for this patient');
       }
@@ -41,7 +35,7 @@ export class ActionableStepsService {
 
   static fetchStepsByDoctor = async (doctorId: number) => {
     try {
-      const steps = await ActionableStepsRepository.fetchStepsByDoctor(doctorId);
+      const steps = await ActionableStepsRepository.fetchActionableStepsByDoctor(doctorId);
       if (!steps || steps.length === 0) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'No actionable steps found for this doctor');
       }
@@ -51,6 +45,19 @@ export class ActionableStepsService {
       throw error;
     }
   };
+
+static fetchAllActionableSteps = async () => {
+  try {
+    const steps = await ActionableStepsRepository.fetchAllActionableSteps();
+    if (!steps || steps.length === 0) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'No actionable steps found');
+    }
+    return steps;
+  } catch (error) {
+    _logger.error('[ActionableStepsService]::Error fetching all actionable steps', error);
+    throw error;
+  }
+};
 
   static updateActionableStep = async (stepId: number, stepDetails: string) => {
     try {

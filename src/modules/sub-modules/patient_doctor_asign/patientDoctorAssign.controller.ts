@@ -1,22 +1,20 @@
 import { ResponseHandler } from '../../../shared/helpers/response.handler';
 import { Request, Response } from 'express';
 import Logger from '../../../config/logger';
-import { UserService } from '../../users/user/service';
 import { StatusCodes } from 'http-status-codes';
-import {  AssignDoctorSchema, 
-  FetchAssignmentSchema, 
-  DeleteAssignmentSchema  } from './validation';
-import { TotpHelper } from '../../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import { PatientDoctorAssignmentService } from './service';
+import { createPatientDoctorAssignmentSchema, fetchPatientDoctorAssignmentByIdSchema } from './validation';
+
+
 
 const _logger = new Logger('Meidcal History');
 
 export class PatientDoctorAssignmentController {
   static fetchAssignment = async (req: Request, res: Response) => {
     try {
-      const { patient_id, doctor_id } = FetchAssignmentSchema.parse(req.params);
+      const { assignment_id} = fetchPatientDoctorAssignmentByIdSchema.parse(req.params);
 
-      const assignment = await PatientDoctorAssignmentService.fetchAssignment(patient_id, doctor_id);
+      const assignment = await PatientDoctorAssignmentService.fetchAssignment(parseInt(assignment_id));
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Assignment fetched successfully',
@@ -52,9 +50,9 @@ export class PatientDoctorAssignmentController {
 
   static assignDoctor = async (req: Request, res: Response) => {
     try {
-      const payload = AssignDoctorSchema.parse(req.body);
+      const payload = createPatientDoctorAssignmentSchema.parse(req.body);
 
-      const assignment = await PatientDoctorAssignmentService.assignDoctor(payload);
+      const assignment = await PatientDoctorAssignmentService.assignDoctorToPatient(payload);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Doctor assigned successfully',
@@ -72,13 +70,14 @@ export class PatientDoctorAssignmentController {
 
   static unassignDoctor = async (req: Request, res: Response) => {
     try {
-      const { patient_id, doctor_id } = DeleteAssignmentSchema.parse(req.params);
+      const { patient_id, doctor_id } = req.params;
 
-      await PatientDoctorAssignmentService.unassignDoctor(patient_id, doctor_id);
+      await PatientDoctorAssignmentService.unassignDoctorFromPatient(parseInt(patient_id), parseInt(doctor_id));
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Doctor unassigned successfully',
         code: StatusCodes.NO_CONTENT,
+        data: null,
       });
     } catch (error) {
       _logger.error(

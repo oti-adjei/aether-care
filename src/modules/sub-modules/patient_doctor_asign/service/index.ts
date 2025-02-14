@@ -1,20 +1,15 @@
-import { ResponseHandler } from '../../shared/helpers/response.handler';
-import { Request, Response } from 'express';
-import Logger from '../../config/logger';
-import { UserService } from '../users/user/service';
+
+import { ApiError } from 'src/shared/utils/api.error';
+import Logger from '../../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, 
-  FetchMedicalHistoryByPatientSchema, 
-  CreateMedicalHistorySchema, 
-  UpdateMedicalHistorySchema, 
-  DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import { PatientDoctorAssignmentRepository } from '../repository';
+
 
 const _logger = new Logger('Meidcal History');
 
 export class PatientDoctorAssignmentService {
-  static assignDoctorToPatient = async (patientId: number, doctorId: number) => {
+  static assignDoctorToPatient = async (request:any) => {
+    const { patientId, doctorId } = request.body;
     try {
       const assignment = await PatientDoctorAssignmentRepository.assignDoctorToPatient(patientId, doctorId);
       if (!assignment) {
@@ -23,6 +18,19 @@ export class PatientDoctorAssignmentService {
       return assignment;
     } catch (error) {
       _logger.error('[PatientDoctorAssignmentService]::Error assigning doctor to patient', error);
+      throw error;
+    }
+  };
+
+  static fetchAssignment = async (id: number) => {
+    try {
+      const assignment = await PatientDoctorAssignmentRepository.fetchAssignment(id);
+      if (!assignment) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Assignment not found');
+      }
+      return assignment;
+    } catch (error) {
+      _logger.error('[PatientDoctorAssignmentService]::Error fetching assignment', error);
       throw error;
     }
   };
@@ -39,10 +47,22 @@ export class PatientDoctorAssignmentService {
       throw error;
     }
   };
+  static fetchAllAssignments = async () => {
+    try {
+      const assignments = await PatientDoctorAssignmentRepository.fetchAllAssignments();
+      if (!assignments || assignments.length === 0) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'No assignments found');
+      }
+      return assignments;
+    } catch (error) {
+      _logger.error('[PatientDoctorAssignmentService]::Error fetching all assignments', error);
+      throw error;
+    }
+  };
 
   static fetchPatientsByDoctor = async (doctorId: number) => {
     try {
-      const patients = await PatientDoctorAssignmentRepository.fetchPatientsByDoctor(doctorId);
+      const patients = await PatientDoctorAssignmentRepository.fetchAssignmentsByDoctor(doctorId);
       if (!patients || patients.length === 0) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'No patients found for this doctor');
       }

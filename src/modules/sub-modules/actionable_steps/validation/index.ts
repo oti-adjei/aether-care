@@ -1,22 +1,22 @@
 import { z } from 'zod';
 
 // Schema for fetching an actionable step by ID
-export const FetchActionableStepByIdSchema = z.object({
+export const fetchActionableStepByIdSchema = z.object({
   step_id: z.string().uuid(),
 });
 
 // Schema for fetching all actionable steps for a patient
-export const FetchActionableStepsByPatientSchema = z.object({
+export const fetchActionableStepsByPatientSchema = z.object({
   patient_id: z.string().uuid(),
 });
 
 // Schema for fetching all actionable steps assigned by a doctor
-export const FetchActionableStepsByDoctorSchema = z.object({
+export const fetchActionableStepsByDoctorSchema = z.object({
   doctor_id: z.string().uuid(),
 });
 
 // Schema for creating an actionable step
-export const CreateActionableStepSchema = z.object({
+export const createActionableStepSchema = z.object({
   patient_id: z.string().uuid(),
   doctor_id: z.string().uuid(),
   description: z.string().min(1, "Description is required"),
@@ -25,7 +25,7 @@ export const CreateActionableStepSchema = z.object({
 });
 
 // Schema for updating an actionable step
-export const UpdateActionableStepSchema = z.object({
+export const updateActionableStepSchema = z.object({
   step_id: z.string().uuid(),
   description: z.string().optional(),
   due_date: z.string().datetime().optional(),
@@ -33,6 +33,14 @@ export const UpdateActionableStepSchema = z.object({
 });
 
 // Schema for deleting an actionable step
-export const DeleteActionableStepSchema = z.object({
+export const deleteActionableStepSchema = z.object({
   step_id: z.string().uuid(),
 });
+
+
+export type FetchActionableStepByIdValidator = z.infer<typeof fetchActionableStepByIdSchema>;
+export type FetchActionableStepsByPatientValidator = z.infer<typeof fetchActionableStepsByPatientSchema>;
+export type FetchActionableStepsByDoctorValidator = z.infer<typeof fetchActionableStepsByDoctorSchema>;
+export type CreateActionableStepValidator = z.infer<typeof createActionableStepSchema>;
+export type UpdateActionableStepValidator = z.infer<typeof updateActionableStepSchema>;
+export type DeleteActionableStepValidator = z.infer<typeof deleteActionableStepSchema>;

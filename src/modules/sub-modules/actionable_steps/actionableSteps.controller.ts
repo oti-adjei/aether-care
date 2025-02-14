@@ -1,20 +1,17 @@
 import { ResponseHandler } from '../../../shared/helpers/response.handler';
 import { Request, Response } from 'express';
 import Logger from '../../../config/logger';
-import { UserService } from '../../users/user/service';
 import { StatusCodes } from 'http-status-codes';
-import {  CreateActionableStepSchema,
-  UpdateActionableStepSchema,
-  FetchActionableStepSchema, } from './validation';
-import { TotpHelper } from '../../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import {  createActionableStepSchema,
+  updateActionableStepSchema, } from './validation';
+import { ActionableStepsService } from './service';
 
 const _logger = new Logger('Meidcal History');
 
 export class ActionableStepsController {
   static async createActionableStep(req: Request, res: Response) {
     try {
-      const payload = CreateActionableStepSchema.parse(req.body);
+      const payload = createActionableStepSchema.parse(req.body);
 
       const step = await ActionableStepsService.createActionableStep(payload);
       const response = new ResponseHandler(req, res);
@@ -34,9 +31,9 @@ export class ActionableStepsController {
 
   static async fetchActionableStep(req: Request, res: Response) {
     try {
-      const { step_id } = FetchActionableStepSchema.parse(req.params);
+      const { step_id } = createActionableStepSchema.parse(req.params);
 
-      const step = await ActionableStepsService.fetchActionableStep(step_id);
+      const step = await ActionableStepsService.createActionableStep(step_id);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Actionable step fetched successfully',
@@ -72,8 +69,8 @@ export class ActionableStepsController {
 
   static async updateActionableStep(req: Request, res: Response) {
     try {
-      const { step_id } = FetchActionableStepSchema.parse(req.params);
-      const payload = UpdateActionableStepSchema.parse(req.body);
+      const { step_id } = createActionableStepSchema.parse(req.params);
+      const payload = updateActionableStepSchema.parse(req.body);
 
       const step = await ActionableStepsService.updateActionableStep(step_id, payload);
       const response = new ResponseHandler(req, res);
@@ -93,13 +90,14 @@ export class ActionableStepsController {
 
   static async deleteActionableStep(req: Request, res: Response) {
     try {
-      const { step_id } = FetchActionableStepSchema.parse(req.params);
+      const { step_id } = createActionableStepSchema.parse(req.params);
 
       await ActionableStepsService.deleteActionableStep(step_id);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Actionable step deleted successfully',
         code: StatusCodes.NO_CONTENT,
+        data: null,
       });
     } catch (error) {
       _logger.error(

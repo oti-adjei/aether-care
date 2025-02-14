@@ -1,20 +1,18 @@
 import { ResponseHandler } from '../../../shared/helpers/response.handler';
 import { Request, Response } from 'express';
 import Logger from '../../../config/logger';
-import { UserService } from '../../users/user/service';
 import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, FetchMedicalHistoryByPatientSchema, CreateMedicalHistorySchema, UpdateMedicalHistorySchema, DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import {  fetchMedicalHistoryByIdSchema, fetchMedicalHistoryByPatientSchema, createMedicalHistorySchema, updateMedicalHistorySchema, deleteMedicalHistorySchema  } from './validation';
+import { MedicalHistoryService } from './service';
 
 const _logger = new Logger('Meidcal History');
 
 export class MedicalHistoryController {
   static fetchMedicalHistory = async (req: Request, res: Response) => {
     try {
-      const { id } = FetchMedicalHistoryByIdSchema.parse(req.params);
+      const { history_id } = fetchMedicalHistoryByIdSchema.parse(req.params);
 
-      const history = await MedicalHistoryService.fetchMedicalHistory(id);
+      const history = await MedicalHistoryService.fetchMedicalHistory(history_id);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Medical history fetched successfully',
@@ -32,7 +30,7 @@ export class MedicalHistoryController {
 
   static fetchMedicalHistoryByPatient = async (req: Request, res: Response) => {
     try {
-      const { patient_id } = FetchMedicalHistoryByPatientSchema.parse(req.params);
+      const { patient_id } = fetchMedicalHistoryByPatientSchema.parse(req.params);
 
       const history = await MedicalHistoryService.fetchMedicalHistoryByPatient(patient_id);
       const response = new ResponseHandler(req, res);
@@ -70,7 +68,7 @@ export class MedicalHistoryController {
 
   static createMedicalHistory = async (req: Request, res: Response) => {
     try {
-      const payload = CreateMedicalHistorySchema.parse(req.body);
+      const payload = createMedicalHistorySchema.parse(req.body);
 
       const history = await MedicalHistoryService.createMedicalHistory(payload);
       const response = new ResponseHandler(req, res);
@@ -90,8 +88,8 @@ export class MedicalHistoryController {
 
   static updateMedicalHistory = async (req: Request, res: Response) => {
     try {
-      const { id } = UpdateMedicalHistorySchema.parse(req.params);
-      const updateData = UpdateMedicalHistorySchema.parse(req.body);
+      const { id } = req.params;
+      const updateData = updateMedicalHistorySchema.parse(req.body);
 
       const history = await MedicalHistoryService.updateMedicalHistory(id, updateData);
       const response = new ResponseHandler(req, res);
@@ -111,9 +109,9 @@ export class MedicalHistoryController {
 
   static deleteMedicalHistory = async (req: Request, res: Response) => {
     try {
-      const { id } = DeleteMedicalHistorySchema.parse(req.params);
+      const { history_id } = deleteMedicalHistorySchema.parse(req.params);
 
-      await MedicalHistoryService.deleteMedicalHistory(id);
+      await MedicalHistoryService.deleteMedicalHistory(history_id);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Medical history deleted successfully',

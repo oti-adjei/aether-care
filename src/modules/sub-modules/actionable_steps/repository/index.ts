@@ -28,6 +28,34 @@ export class ActionableStepsRepository {
     }
   }
 
+  static async fetchActionableStepsByPatient(stepId: number) {
+    try {
+      const step = await sqlQuest.oneOrNone(actionableStepsQueries.fetchActionableStepsByPatient, [stepId]);
+      return step;
+    } catch (error) {
+      
+    }
+  }
+
+  static async fetchActionableStepsByDoctor(doctorId: number) {
+    try {
+      const steps = await sqlQuest.manyOrNone(actionableStepsQueries.fetchActionableStepsByDoctor, [doctorId]);
+      return steps;
+    } catch (error) {
+      _logger.error('[ActionableStepsRepository]::Something went wrong when fetching actionable steps by doctor', error);
+      throw error;
+    }
+  }
+
+  static fetchAllActionableSteps() {
+    try {
+      return sqlQuest.manyOrNone(actionableStepsQueries.fetchAllActionableSteps);
+    } catch (error) {
+      _logger.error('[ActionableStepsRepository]::Something went wrong when fetching all actionable steps', error);
+      throw error;
+    }
+  }
+
   static async updateActionableStep(stepId: number, step: string, dueDate: Date) {
     try {
       const updatedStep = await sqlQuest.oneOrNone(actionableStepsQueries.updateActionableStep, [stepId, step, dueDate]);

@@ -1,17 +1,17 @@
 import { z } from 'zod';
 
 // Schema for fetching medical history by ID
-export const FetchMedicalHistoryByIdSchema = z.object({
+export const fetchMedicalHistoryByIdSchema = z.object({
   history_id: z.string().uuid(),
 });
 
 // Schema for fetching medical history by patient ID
-export const FetchMedicalHistoryByPatientSchema = z.object({
+export const fetchMedicalHistoryByPatientSchema = z.object({
   patient_id: z.string().uuid(),
 });
 
 // Schema for creating a medical history record
-export const CreateMedicalHistorySchema = z.object({
+export const createMedicalHistorySchema = z.object({
   patient_id: z.string().uuid(),
   doctor_id: z.string().uuid(),
   diagnosis: z.string().min(3).max(500),
@@ -21,7 +21,7 @@ export const CreateMedicalHistorySchema = z.object({
 });
 
 // Schema for updating a medical history record
-export const UpdateMedicalHistorySchema = z.object({
+export const updateMedicalHistorySchema = z.object({
   history_id: z.string().uuid(),
   diagnosis: z.string().min(3).max(500).optional(),
   treatment: z.string().min(3).max(500).optional(),
@@ -29,6 +29,13 @@ export const UpdateMedicalHistorySchema = z.object({
 });
 
 // Schema for deleting a medical history record
-export const DeleteMedicalHistorySchema = z.object({
+export const deleteMedicalHistorySchema = z.object({
   history_id: z.string().uuid(),
 });
+
+
+export type FetchMedicalHistoryByIdValidator= z.infer<typeof fetchMedicalHistoryByIdSchema>;
+export type FetchMedicalHistoryByPatientValidator= z.infer<typeof fetchMedicalHistoryByPatientSchema>;
+export type CreateMedicalHistoryValidator= z.infer<typeof createMedicalHistorySchema>;
+export type UpdateMedicalHistoryValidator= z.infer<typeof updateMedicalHistorySchema>;
+export type DeleteMedicalHistoryValidator= z.infer<typeof deleteMedicalHistorySchema>;
