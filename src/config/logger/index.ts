@@ -12,7 +12,7 @@ const logFormat = winston.format.combine(
     const { level, message, label, timestamp } = info;
 
     return `[${new Date(
-      timestamp,
+      timestamp as string | number, // Add type assertion,
     ).toUTCString()}]: ${label} : - ${level}: ${message}`;
   }),
 );
@@ -99,6 +99,12 @@ export default class Logger {
     });
   }
 
+  public static warn(message: string, context?: string): void {
+    logger.warn(message, {
+      label: `${Env.get<string>('APP_NAME')}::${context}`,
+    });
+  }
+
   public static error(message: string, err: any): void {
     logger.error(message, err);
   }
@@ -108,6 +114,11 @@ export default class Logger {
       context ?? this.defaultContext
     }`;
     logger.info(message, { label: labelFormat });
+  }
+
+  public warn(message: string | any, context?: string) {
+    const labelFormat = `${Env.get<string>('APP_NAME')}::${context ?? this.defaultContext}`;
+    logger.warn(message, { label: labelFormat });
   }
 
   public error(message: string, err: any = null): void {

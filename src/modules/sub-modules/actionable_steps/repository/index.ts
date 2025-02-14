@@ -37,15 +37,15 @@ export class ActionableStepsRepository {
     }
   }
 
-  static async fetchActionableStepsByDoctor(doctorId: number) {
-    try {
-      const steps = await sqlQuest.manyOrNone(actionableStepsQueries.fetchActionableStepsByDoctor, [doctorId]);
-      return steps;
-    } catch (error) {
-      _logger.error('[ActionableStepsRepository]::Something went wrong when fetching actionable steps by doctor', error);
-      throw error;
-    }
-  }
+  // static async fetchActionableStepsByDoctor(doctorId: number) {
+  //   try {
+  //     const steps = await sqlQuest.manyOrNone(actionableStepsQueries.fetchActionableStepsByDoctor, [doctorId]);
+  //     return steps;
+  //   } catch (error) {
+  //     _logger.error('[ActionableStepsRepository]::Something went wrong when fetching actionable steps by doctor', error);
+  //     throw error;
+  //   }
+  // }
 
   static fetchAllActionableSteps() {
     try {
@@ -56,9 +56,9 @@ export class ActionableStepsRepository {
     }
   }
 
-  static async updateActionableStep(stepId: number, step: string, dueDate: Date) {
+  static async updateActionableStep(stepId: number, step_type: string, description: string, scheduled_for: Date, completed: boolean) {
     try {
-      const updatedStep = await sqlQuest.oneOrNone(actionableStepsQueries.updateActionableStep, [stepId, step, dueDate]);
+      const updatedStep = await sqlQuest.oneOrNone(actionableStepsQueries.updateActionableStep, [stepId,step_type, description, scheduled_for, completed]);
       return updatedStep;
     } catch (error) {
       _logger.error('[ActionableStepsRepository]::Something went wrong when updating actionable step', error);

@@ -51,7 +51,7 @@ export class MedicalHistoryRepository {
   static async updateMedicalHistory(id: string, request: any) {
     const { historyId, diagnosis, treatment, notes } = request;
     try {
-      const updatedMedicalHistory = await sqlQuest.one(medicalHistoryQueries.updateMedicalHistory, [diagnosis, treatment, notes, historyId]);
+      const updatedMedicalHistory = await sqlQuest.one(medicalHistoryQueries.updateMedicalHistory, [id,diagnosis, treatment, notes, historyId]);
       return updatedMedicalHistory;
     } catch (error) {
       _logger.error('[MedicalHistoryRepository]::Something went wrong when updating medical history', error);

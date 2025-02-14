@@ -89,13 +89,13 @@ export class AdminService {
     }
   };
 
-  static updateAdmin = async (id: number, request: UpdateAdminValidator) => {
+  static updateAdmin = async (id: string, request: UpdateAdminValidator) => {
     try {
       const {
         firstName,
         surname,
         email,
-        phone,
+        // phone,
         password,
       } = request;
 

@@ -1,8 +1,8 @@
-import Logger from '../../../../config/logger';
+import Logger from '../../../config/logger';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import Env from '../../../../shared/utils/env';
-import { ApiError } from '../../../../shared/utils/api.error';
+import Env from '../../../shared/utils/env';
+import { ApiError } from '../../../shared/utils/api.error';
 import { StatusCodes } from 'http-status-codes';
 
 

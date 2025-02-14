@@ -1,65 +1,47 @@
 import express from 'express';
-import { UserController } from './user.controller';
+import  UsersController  from './user.controller';
 import { ValidationMiddleware } from '../../../shared/validators/middleware';
-import { fetchUserByIdSchema, fetchUserByEmailSchema, createUserSchema, updateUserSchema, deleteUserSchema, loginValidator, sendPhoneNumberOtpValidator, verifyPhoneNumberOtpValidator, } from './validation';
+import { fetchUserSchema, fetchUserByEmailSchema, createUserSchema, updateUserSchema, deleteUserSchema } from './validation';
 import { tryCatch } from '../../../shared/helpers/try.catch.helper';
-import {getUserverifyToken } from "./middleware/verifytoken";
+// import {getUserverifyToken } from "./middleware/verifytoken";
 
 const router = express.Router();
 
 const { validateRequest } = ValidationMiddleware;
 
 router.get(
-  '/:id',
-  validateRequest(fetchUserByIdSchema),
-  tryCatch(UserController.fetchUser),
+  '/:user_id',
+  validateRequest(fetchUserSchema),
+  tryCatch(UsersController.fetchUserById),
 );
 
 router.get(
   '/all/users',
-  tryCatch(UserController.fetchAllUsers),
-);
-
-router.post(
-  '/send/phone-number-otp',
-  validateRequest(sendPhoneNumberOtpValidator),
-  tryCatch(UserController.sendPhoneNumberOtp),
-);
-router.post(
-  '/send/verify-otp',
-  getUserverifyToken,
-  validateRequest(verifyPhoneNumberOtpValidator),
-  tryCatch(UserController.verifyPhoneNumberOtp),
-);
-
-router.post(
-  '/login',
-  validateRequest(loginValidator),
-  tryCatch(UserController.login),
+  tryCatch(UsersController.fetchAllUsers),
 );
 
 router.get(
   '/email/:email',
   validateRequest(fetchUserByEmailSchema),
-  tryCatch(UserController.fetchUserByEmail),
+  tryCatch(UsersController.fetchUserByEmail),
 );
 
 router.post(
   '/users',
   validateRequest(createUserSchema),
-  tryCatch(UserController.createUser),
+  tryCatch(UsersController.createUser),
 );
 
 router.put(
-  '/:id',
+  '/:user_id',
   validateRequest(updateUserSchema),
-  tryCatch(UserController.updateUser),
+  tryCatch(UsersController.updateUser),
 );
 
 router.delete(
-  '/:id',
+  '/:user_id',
   validateRequest(deleteUserSchema),
-  tryCatch(UserController.deleteUser),
+  tryCatch(UsersController.deleteUser),
 );
 
 export const userRouter = router;

@@ -42,7 +42,7 @@ export class AuthController {
       const { token } = payload; // OTP entered by the user (if required)
   
       // Step 1: Authenticate the user (Check email & password)
-      const user = await UserService.login(payload);
+      const user = await AuthService.login(payload);
   
       // Step 2: If user is a doctor, check if they have TOTP set up
       if (user.type === 'doctor') {
@@ -104,14 +104,7 @@ export class AuthController {
       _logger.log('[UserController]::Sending phone number otp');
       const payload = req.body as SendPhoneNumberOtpValidator;
       const type = payload.type;
-      let otp;
-      if (type ===SendUserType.Business || type ===SendUserType.Personal || type ===SendUserType.ClearingAgent || type ===SendUserType.FreightForwarders) {
-        otp = await UserService.sendPhoneNumberOtp(payload);
-      } else if (type === SendUserType.Rider || type === SendUserType.Driver) {
-        otp = await UserService.sendPhoneNumberOtp(payload);
-      } else {
-        throw new Error('Invalid type provided');
-      }
+        const otp = await AuthService.sendPhoneNumberOtp(payload);
 
       const response = new ResponseHandler(req, res);
       response.success({
@@ -134,15 +127,8 @@ export class AuthController {
       const payload = req.body as VerifyPhoneNumberOtpValidator;
       const userId = (req as any).userId;
       const type = payload.type;
-
-      let user
-      if (type === SendUserType.Business || type === SendUserType.Personal || type === SendUserType.ClearingAgent || type === SendUserType.FreightForwarders) {
-         user  = await UserService.verifyPhoneNumberOtp(payload,userId);
-      } else if (type === SendUserType.Rider || type === SendUserType.Driver) {
-         user = await UserService.verifyPhoneNumberOtp(payload,userId);
-      } else {
-        throw new Error('Invalid type provided');
-      }
+      const user  = await AuthService.verifyPhoneNumberOtp(payload,userId);
+      
 
       const response = new ResponseHandler(req, res);
       response.success({

@@ -1,19 +1,17 @@
 export const UserQueries = {
-  createPersonalUser: `INSERT INTO users (first_name, surname, email, ghana_ecowas_number, mobile_number, whatsapp_number, city, password, type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
-  storeOtp: `INSERT INTO user_otps (user_id, type) VALUES ($1, $2) RETURNING *;`,
-  fetchUser: `SELECT * FROM users WHERE id = $1;`,
+  createUser: `INSERT INTO users (first_name, surname, email, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
+  fetchUser: `SELECT * FROM users WHERE user_id = $1;`,
   fetchAllUsers: `SELECT * FROM users;`,
   fetchUserByEmail: `SELECT * FROM users WHERE email = $1;`,
-  updateUser: `UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email), password = COALESCE($3, password) WHERE id = $4 RETURNING *;`,
-  deleteUser: `UPDATE users SET deleted_at = NOW() WHERE id = $1 RETURNING *;`,
-  restoreUser: `UPDATE users SET deleted_at = NULL WHERE id = $1 RETURNING *;`,
-  getUserByPhoneNumber: `SELECT * FROM users WHERE mobile_number = $1;`,
+  updateUser: `UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email), password = COALESCE($3, password) WHERE user_id = $4 RETURNING *;`,
+  deleteUser: `UPDATE users SET deleted_at = NOW() WHERE user_id = $1 RETURNING *;`,
   checkIfUserExists: `SELECT * FROM users WHERE email = $1;`,
-  fetchOtp: `SELECT otp FROM user_otps WHERE user_id = $1 AND type = $2;`,
-  checkVerified: `SELECT is_verified FROM users WHERE id = $1;`,
-  updateVerifiedfield: `UPDATE users SET is_verified = TRUE WHERE id = $1 RETURNING *;`,
+    // storeOtp: `INSERT INTO user_otps (user_id, type) VALUES ($1, $2) RETURNING *;`,
+  // fetchOtp: `SELECT otp FROM user_otps WHERE user_id = $1 AND type = $2;`,
+  // checkVerified: `SELECT is_verified FROM users WHERE user_id = $1;`,
+  // updateVerifiedfield: `UPDATE users SET is_verified = TRUE WHERE user_id = $1 RETURNING *;`,
   // storeOtp: `INSERT INTO user_otps (user_id, otp) VALUES ($1, $2);`,
-  updateOtp: `UPDATE user_otps SET otp = $1 WHERE user_id = $2 AND type = $3;`
+  // updateOtp: `UPDATE user_otps SET otp = $1 WHERE user_id = $2 AND type = $3;`
 };
 
 

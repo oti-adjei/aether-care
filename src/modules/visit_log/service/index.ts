@@ -4,9 +4,10 @@ import Logger from '../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
 import { VisitLogRepository } from '../repository';
 
-const _logger = new Logger('Meidcal History');
+const _logger = new Logger('VisitLogService');
 export class VisitLogService {
-  static logVisit = async (patientId: number, doctorId: number, visitDetails: string) => {
+  static createVisitLog = async (req: any) => {
+    const { patientId, doctorId, visitDetails } = req.body;
     try {
       const visitLog = await VisitLogRepository.createVisitLog(patientId, doctorId, visitDetails);
       if (!visitLog) {
@@ -19,7 +20,7 @@ export class VisitLogService {
     }
   };
 
-  static fetchVisitsByPatient = async (patientId: number) => {
+  static fetchVisitsByPatient = async (patientId: string) => {
     try {
       const visits = await VisitLogRepository.fetchVisitsByPatient(patientId);
       if (!visits || visits.length === 0) {
@@ -58,9 +59,10 @@ export class VisitLogService {
     }
   };
 
-  static updateVisitLog = async (visitId: number, notes: string) => {
+  static updateVisitLog = async (visitId: number, payload: any) => {
+    const {doctor_id, patient_id} = payload
     try {
-      const visit = await VisitLogRepository.updateVisitLog(visitId, notes);
+      const visit = await VisitLogRepository.updateVisitLog(visitId, patient_id, doctor_id);
       if (!visit) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Visit not found');
       }

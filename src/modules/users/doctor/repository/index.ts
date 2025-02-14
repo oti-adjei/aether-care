@@ -36,7 +36,7 @@ export class DoctorRepository {
     user_id: number,
     // phone_number: string,
     experience: number,
-    specialization: string,
+    specialty: string,
     license_number: string
   ) => {
     try {
@@ -44,7 +44,7 @@ export class DoctorRepository {
         user_id,
         // phone_number,
         experience,
-        specialization,
+        specialty,
         license_number,
       ]);
       return doctor;
@@ -57,9 +57,9 @@ export class DoctorRepository {
     }
   };
 
-  static fetchDoctor = async (id: string) => {
+  static fetchDoctor = async (user_id: string) => {
     try {
-      const doctor = await sqlQuest.oneOrNone(doctorQueries.fetchDoctor, [id]);
+      const doctor = await sqlQuest.oneOrNone(doctorQueries.fetchDoctor, [user_id]);
       return doctor;
     } catch (error) {
       _logger.error(
@@ -84,7 +84,7 @@ export class DoctorRepository {
   };
 
   static updateDoctor = async (
-    id: number,
+    user_id: number,
     // phone_number?: string,
     experience?: number,
     specialization?: string,
@@ -96,7 +96,7 @@ export class DoctorRepository {
         experience,
         specialization,
         license_number,
-        id,
+        user_id,
       ]);
       return doctor;
     } catch (error) {
@@ -108,9 +108,9 @@ export class DoctorRepository {
     }
   };
 
-  static deleteDoctor = async (id: string) => {
+  static deleteDoctor = async (user_id: string) => {
     try {
-      const doctor = await sqlQuest.oneOrNone(doctorQueries.deleteDoctor, [id]);
+      const doctor = await sqlQuest.oneOrNone(doctorQueries.deleteDoctor, [user_id]);
       return doctor;
     } catch (error) {
       _logger.error(

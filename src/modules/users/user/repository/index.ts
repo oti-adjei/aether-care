@@ -1,8 +1,7 @@
-import { UserAccount, UserAccountEmail, } from '../../../../shared/helpers/sanitize.input';
 import { sqlQuest } from '../../../../config/database';
 import Logger from '../../../../config/logger';
-import { userQueries } from '../queries';
-import { ConsumerUserType } from '../validation';
+import { UserQueries } from '../queries';
+
 
 const _logger = new Logger('UserRepository');
 
@@ -16,7 +15,7 @@ export class UserRepository {
     role: string
   ) => {
     try {
-      const user = await sqlQuest.one(userQueries.createUser, [
+      const user = await sqlQuest.one(UserQueries.createUser, [
         first_name,
         surname,
         email,
@@ -33,9 +32,9 @@ export class UserRepository {
     }
   };
 
-  static fetchUserById = async (id: number) => {
+  static fetchUserById = async (user_id: number) => {
     try {
-      const user = await sqlQuest.oneOrNone(userQueries.fetchUserById, [id]);
+      const user = await sqlQuest.oneOrNone(UserQueries.fetchUser, [user_id]);
       return user;
     } catch (error) {
       _logger.error(
@@ -48,7 +47,7 @@ export class UserRepository {
 
   static fetchAllUsers = async () => {
     try {
-      const users = await sqlQuest.manyOrNone(userQueries.fetchAllUsers);
+      const users = await sqlQuest.manyOrNone(UserQueries.fetchAllUsers);
       return users;
     } catch (error) {
       _logger.error(
@@ -61,7 +60,7 @@ export class UserRepository {
 
   static fetchUserByEmail = async (email: string) => {
     try {
-      const user = await sqlQuest.oneOrNone(userQueries.fetchUserByEmail, [email]);
+      const user = await sqlQuest.oneOrNone(UserQueries.fetchUserByEmail, [email]);
       return user;
     } catch (error) {
       _logger.error(
@@ -73,19 +72,19 @@ export class UserRepository {
   };
 
   static updateUser = async (
-    id: number,
+    user_id: string,
     first_name?: string,
     surname?: string,
     email?: string,
     password?: string
   ) => {
     try {
-      const user = await sqlQuest.one(userQueries.updateUser, [
+      const user = await sqlQuest.one(UserQueries.updateUser, [
         first_name,
         surname,
         email,
         password,
-        id
+        user_id
       ]);
       return user;
     } catch (error) {
@@ -97,9 +96,9 @@ export class UserRepository {
     }
   };
 
-  static deleteUser = async (id: number) => {
+  static deleteUser = async (user_id: number) => {
     try {
-      const user = await sqlQuest.oneOrNone(userQueries.deleteUser, [id]);
+      const user = await sqlQuest.oneOrNone(UserQueries.deleteUser, [user_id]);
       return user;
     } catch (error) {
       _logger.error(

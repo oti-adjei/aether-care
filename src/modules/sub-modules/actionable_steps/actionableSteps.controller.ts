@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import Logger from '../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
 import {  createActionableStepSchema,
+  fetchActionableStepByIdSchema,
   updateActionableStepSchema, } from './validation';
 import { ActionableStepsService } from './service';
 
@@ -31,7 +32,7 @@ export class ActionableStepsController {
 
   static async fetchActionableStep(req: Request, res: Response) {
     try {
-      const { step_id } = createActionableStepSchema.parse(req.params);
+      const { step_id } = fetchActionableStepByIdSchema.parse(req.params);
 
       const step = await ActionableStepsService.createActionableStep(step_id);
       const response = new ResponseHandler(req, res);
@@ -69,10 +70,10 @@ export class ActionableStepsController {
 
   static async updateActionableStep(req: Request, res: Response) {
     try {
-      const { step_id } = createActionableStepSchema.parse(req.params);
+      const { step_id } = fetchActionableStepByIdSchema.parse(req.params);
       const payload = updateActionableStepSchema.parse(req.body);
 
-      const step = await ActionableStepsService.updateActionableStep(step_id, payload);
+      const step = await ActionableStepsService.updateActionableStep(parseInt(step_id), payload);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Actionable step updated successfully',
@@ -90,9 +91,9 @@ export class ActionableStepsController {
 
   static async deleteActionableStep(req: Request, res: Response) {
     try {
-      const { step_id } = createActionableStepSchema.parse(req.params);
+      const { step_id } = req.params;
 
-      await ActionableStepsService.deleteActionableStep(step_id);
+      await ActionableStepsService.deleteActionableStep(parseInt(step_id));
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Actionable step deleted successfully',

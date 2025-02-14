@@ -3,18 +3,19 @@ import { Request, Response } from 'express';
 import Logger from '../../../config/logger';
 import { UserService } from './service';
 import { StatusCodes } from 'http-status-codes';
-import { FetchUserByIdSchema, FetchUserByEmailSchema, CreateUserSchema, UpdateUserSchema, DeleteUserSchema, SendPhoneNumberOtpValidator, VerifyPhoneNumberOtpValidator, SendUserType, } from './validation';
-// import { RiderService } from '../courier/service';
+import {  updateUserSchema, createUserSchema, } from './validation';
+
+
 
 const _logger = new Logger('UserController');
 
 
 export default class UsersController {
-  static fetchUser = async (req: Request, res: Response) => {
+  static fetchUserById = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { user_id } = req.params;
 
-      const user = await UserService.fetchUser(parseInt(id));
+      const user = await UserService.fetchUserById(parseInt(user_id));
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'User fetched successfully',
@@ -61,7 +62,7 @@ export default class UsersController {
 
   static createUser = async (req: Request, res: Response) => {
     try {
-      const payload = req.body;
+      const payload = createUserSchema.parse(req.body) ;
 
       const user = await UserService.createUser(payload);
       const response = new ResponseHandler(req, res);
@@ -79,11 +80,11 @@ export default class UsersController {
   static updateUser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const payload = req.body;
+      
+      const payload = updateUserSchema.parse(req.body) ;
 
       
-      // const user = await UserService.updateUser(id, payload);
-      const user = await UserService.createUser(payload);
+      const user = await UserService.updateUser(id, payload);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'User updated successfully',

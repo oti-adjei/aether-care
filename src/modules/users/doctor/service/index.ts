@@ -23,9 +23,9 @@ import { UserRepository } from '../../user/repository';
 
 const _logger = new Logger('UserService');
 export class DoctorService {
-  static fetchDoctor = async (id: string) => {
+  static fetchDoctor = async (user_id: string) => {
     try {
-      const doctor = await DoctorRepository.fetchDoctor(id);
+      const doctor = await DoctorRepository.fetchDoctor(user_id);
       if (!doctor) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Doctor not found');
       }
@@ -64,7 +64,7 @@ export class DoctorService {
 
   static createDoctor = async (request: CreateDoctorValidator) => {
     try {
-      const { firstName,surname,email,phone,specialization,password,experience,license_number } = request;
+      const { first_name,surname,email,specialty,password,experience,license_number } = request;
       const existingDoctor = await DoctorRepository.checkIfDoctorExists(email);
 
       if (existingDoctor) {
@@ -72,10 +72,10 @@ export class DoctorService {
       }
 
       //create User first
-      const user = await UserRepository.createUser(firstName,surname, email, password, 'doctor');
+      const user = await UserRepository.createUser(first_name,surname, email, password, 'doctor');
 
       //create doctor
-      const doctor = await DoctorRepository.createDoctor(user.user_id,experience,specialization,license_number);
+      const doctor = await DoctorRepository.createDoctor(user.user_id,experience,specialty,license_number);
       if (!doctor) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to create doctor');
       }
@@ -86,9 +86,9 @@ export class DoctorService {
     }
   };
 
-  static updateDoctor = async (id: number, request: UpdateDoctorValidator) => {
+  static updateDoctor = async (user_id: string, request: UpdateDoctorValidator) => {
     try {
-      const { firstName,surname, email,phone, specialization,experience,license_number,password } = request;
+      const { first_name,surname, email, specialty,experience,license_number,password } = request;
 
       let existingDoctor
       if (email) {
@@ -99,8 +99,8 @@ export class DoctorService {
       }
 
       //update User side first
-      const user = await UserRepository.updateUser(id, firstName,surname, email, password);
-      const doctor = await DoctorRepository.updateDoctor(user.user_id, experience, specialization, license_number);
+      const user = await UserRepository.updateUser(user_id, first_name,surname, email, password);
+      const doctor = await DoctorRepository.updateDoctor(user.user_id, experience, specialty, license_number);
       if (!doctor) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Doctor not found');
       }
@@ -111,9 +111,9 @@ export class DoctorService {
     }
   };
 
-  static deleteDoctor = async (id: string) => {
+  static deleteDoctor = async (user_id: string) => {
     try {
-      const doctor = await DoctorRepository.deleteDoctor(id);
+      const doctor = await DoctorRepository.deleteDoctor(user_id);
       if (!doctor) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Doctor not found');
       }

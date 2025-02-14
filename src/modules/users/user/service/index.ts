@@ -3,28 +3,17 @@ import Logger from '../../../../config/logger';
 import { UserRepository } from '../repository';
 import { StatusCodes } from 'http-status-codes';
 import {
-  sanitizeInput,
-  NullableString,
-
-} from '../../../../shared/helpers/sanitize.input';
-import {
-  ConsumerUserType,
-  CreateUserSchema,
-  LoginValidator,
-  SendPhoneNumberOtpValidator,
-  VerifyPhoneNumberOtpValidator,
+  CreateUserValidator,
+  UpdateUserValidator,
 } from '../validation/index';
-import { GenericHelper } from '../../../../shared/helpers/generic.helper';
-import Env from '../../../../shared/utils/env';
-import * as jwt from 'jsonwebtoken';
 // import logger from '../../../../config/logger';
 
 const _logger = new Logger('UserService');
 
 export class UserService {
-  static fetchUser = async (id: number) => {
+  static fetchUserById = async (id: number) => {
     try {
-      const user = await UserRepository.fetchUser(id);
+      const user = await UserRepository.fetchUserById(id);
       if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
       }
@@ -64,13 +53,14 @@ export class UserService {
     }
   };
 
-  static createUser = async (request: CreateUserSchema) => {
+  static createUser = async (request: CreateUserValidator) => {
+    const {first_name, surname, email, password, role} = request
     try {
       const existingUser = await UserRepository.fetchUserByEmail(request.email);
       if (existingUser) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'User already exists');
       }
-      const user = await UserRepository.createUser(request);
+      const user = await UserRepository.createUser(first_name, surname, email, password, role);
       return user;
     } catch (error) {
       _logger.error('[UserService]::Error creating user', error);
@@ -78,9 +68,10 @@ export class UserService {
     }
   };
 
-  static updateUser = async (id: number, request: UpdateUserSchema) => {
+  static updateUser = async (id: string, request: UpdateUserValidator) => {
+    const {firstName, surname, email, password} = request
     try {
-      const user = await UserRepository.updateUser(id, request);
+      const user = await UserRepository.updateUser(id, firstName, surname, email, password);
       if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
       }

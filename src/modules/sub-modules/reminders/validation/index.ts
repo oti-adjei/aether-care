@@ -1,14 +1,14 @@
 import { z } from 'zod';
 
 export const createReminderSchema = z.object({
-  patientId: z.string().uuid(),
+  patient_id: z.string().uuid(),
   stepId: z.number().int().positive(),
-  reminderTime: z.string().datetime(),
+  reminder_time: z.string().datetime(),
   status: z.enum(['pending', 'sent', 'completed']).default('pending'),
 });
 
 export const fetchReminderSchema = z.object({
-  reminderId: z.number().int().positive(),
+  reminder_id: z.number().int().positive(),
 });
 
 export const fetchAllRemindersSchema = z.object({});
@@ -18,7 +18,10 @@ export const fetchRemindersByPatientSchema = z.object({
 });
 
 export const updateReminderSchema = z.object({
-  reminderId: z.number().int().positive(),
+  reminder_id: z.number().int().positive(),
+  patient_id: z.string().uuid().optional(),
+  step_id: z.number().int().positive().optional(),
+  reminder_time: z.string().datetime().optional(),
   status: z.enum(['pending', 'sent', 'completed']),
 });
 

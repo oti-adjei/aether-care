@@ -91,7 +91,7 @@ export class AdminController {
       const { admin_id } = updateAdminIdSchema.parse(req.params);
       const updateData = updateAdminSchema.parse(req.body);
 
-      const admin = await AdminService.updateAdmin(parseInt(admin_id),updateData);
+      const admin = await AdminService.updateAdmin(admin_id,updateData);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Admin updated successfully',

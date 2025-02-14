@@ -1,9 +1,9 @@
 import express from 'express';
-import { UserController } from './patient.controller';
+import { PatientController } from './patient.controller';
 import { ValidationMiddleware } from '../../../shared/validators/middleware';
-import { fetchUserByIdSchema, fetchUserByEmailSchema, createUserSchema, updateUserSchema, deleteUserSchema, loginValidator, sendPhoneNumberOtpValidator, verifyPhoneNumberOtpValidator, } from './validation';
+import { fetchPatientByIdSchema, fetchPatientByEmailSchema, createPatientSchema, updatePatientSchema, deletePatientSchema, } from './validation';
 import { tryCatch } from '../../../shared/helpers/try.catch.helper';
-import {getUserverifyToken } from "./middleware/verifytoken";
+
 
 const router = express.Router();
 
@@ -11,55 +11,37 @@ const { validateRequest } = ValidationMiddleware;
 
 router.get(
   '/:id',
-  validateRequest(fetchUserByIdSchema),
-  tryCatch(UserController.fetchUser),
+  validateRequest(fetchPatientByIdSchema),
+  tryCatch(PatientController.fetchPatient),
 );
 
 router.get(
   '/all/users',
-  tryCatch(UserController.fetchAllUsers),
-);
-
-router.post(
-  '/send/phone-number-otp',
-  validateRequest(sendPhoneNumberOtpValidator),
-  tryCatch(UserController.sendPhoneNumberOtp),
-);
-router.post(
-  '/send/verify-otp',
-  getUserverifyToken,
-  validateRequest(verifyPhoneNumberOtpValidator),
-  tryCatch(UserController.verifyPhoneNumberOtp),
-);
-
-router.post(
-  '/login',
-  validateRequest(loginValidator),
-  tryCatch(UserController.login),
+  tryCatch(PatientController.fetchAllPatients),
 );
 
 router.get(
   '/email/:email',
-  validateRequest(fetchUserByEmailSchema),
-  tryCatch(UserController.fetchUserByEmail),
+  validateRequest(fetchPatientByEmailSchema),
+  tryCatch(PatientController.fetchPatientByEmail),
 );
 
 router.post(
   '/users',
-  validateRequest(createUserSchema),
-  tryCatch(UserController.createUser),
+  validateRequest(createPatientSchema),
+  tryCatch(PatientController.createPatient),
 );
 
 router.put(
   '/:id',
-  validateRequest(updateUserSchema),
-  tryCatch(UserController.updateUser),
+  validateRequest(updatePatientSchema),
+  tryCatch(PatientController.updatePatient),
 );
 
 router.delete(
   '/:id',
-  validateRequest(deleteUserSchema),
-  tryCatch(UserController.deleteUser),
+  validateRequest(deletePatientSchema),
+  tryCatch(PatientController.deletePatient),
 );
 
 export const userRouter = router;

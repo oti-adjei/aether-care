@@ -3,7 +3,7 @@ import { visitLogQueries } from '../queries';
 import Logger from '../../../config/logger';
 
 
-const _logger = new Logger('Meidcal History');
+const _logger = new Logger('VIsitLogRepository');
 
 
 
@@ -14,15 +14,14 @@ export class VisitLogRepository {
    * @param {number} patientId - The ID of the patient
    * @param {number} doctorId - The ID of the doctor
    * @param {Date} visitDate - The date and time of the visit
-   * @param {string} notes - Optional notes about the visit
    *
    * @returns {Promise<VisitLog>} The created visit log entry
    */
 
 
-  static async createVisitLog(patientId: number, doctorId: number, visitDate: Date, notes: string) {
+  static async createVisitLog(patientId: number, doctorId: number, visitDate: Date) {
     try {
-      const visit = await sqlQuest.one(visitLogQueries.createVisitLog, [patientId, doctorId, visitDate, notes]);
+      const visit = await sqlQuest.one(visitLogQueries.createVisitLog, [patientId, doctorId, visitDate]);
       return visit;
     } catch (error) {
       _logger.error('[VisitLogRepository]::Something went wrong when logging visit', error);
@@ -30,7 +29,7 @@ export class VisitLogRepository {
     }
   }
 
-  static async fetchVisitsByPatient(patientId: number) {
+  static async fetchVisitsByPatient(patientId: string) {
     try {
       const visits = await sqlQuest.manyOrNone(visitLogQueries.fetchVisitLogsByPatient, [patientId]);
       return visits;
@@ -50,9 +49,9 @@ export class VisitLogRepository {
     }
   }
 
-  static async updateVisitLog(visitId: number, notes: string) {
+  static async updateVisitLog(visit_id: number, patient_id: number, doctor_id: number,) {
     try {
-      const visit = await sqlQuest.oneOrNone(visitLogQueries.updateVisitLog, [visitId, notes]);
+      const visit = await sqlQuest.oneOrNone(visitLogQueries.updateVisitLog, [visit_id, patient_id, doctor_id]);
       return visit;
     } catch (error) {
       _logger.error('[VisitLogRepository]::Something went wrong when updating visit', error);
@@ -70,9 +69,9 @@ export class VisitLogRepository {
     }
   }
 
-  static async deleteVisit(visitId: number) {
+  static async deleteVisit(visit_id: number) {
     try {
-      const deletedVisit = await sqlQuest.oneOrNone(visitLogQueries.deleteVisitLog, [visitId]);
+      const deletedVisit = await sqlQuest.oneOrNone(visitLogQueries.deleteVisitLog, [visit_id]);
       return deletedVisit;
     } catch (error) {
       _logger.error('[VisitLogRepository]::Something went wrong when deleting visit', error);

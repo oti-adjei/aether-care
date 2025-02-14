@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Schema for fetching a visit log by ID
 export const fetchVisitLogByIdSchema = z.object({
-  visit_id: z.string().uuid(),
+  visit_id: z.number(),
 });
 
 // Schema for fetching all visits of a patient

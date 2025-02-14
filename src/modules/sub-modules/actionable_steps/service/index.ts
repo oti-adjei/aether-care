@@ -33,18 +33,18 @@ export class ActionableStepsService {
     }
   };
 
-  static fetchStepsByDoctor = async (doctorId: number) => {
-    try {
-      const steps = await ActionableStepsRepository.fetchActionableStepsByDoctor(doctorId);
-      if (!steps || steps.length === 0) {
-        throw new ApiError(StatusCodes.NOT_FOUND, 'No actionable steps found for this doctor');
-      }
-      return steps;
-    } catch (error) {
-      _logger.error('[ActionableStepsService]::Error fetching actionable steps by doctor', error);
-      throw error;
-    }
-  };
+  // static fetchStepsByDoctor = async (doctorId: number) => {
+  //   try {
+  //     const steps = await ActionableStepsRepository.fetchActionableStepsByDoctor(doctorId);
+  //     if (!steps || steps.length === 0) {
+  //       throw new ApiError(StatusCodes.NOT_FOUND, 'No actionable steps found for this doctor');
+  //     }
+  //     return steps;
+  //   } catch (error) {
+  //     _logger.error('[ActionableStepsService]::Error fetching actionable steps by doctor', error);
+  //     throw error;
+  //   }
+  // };
 
 static fetchAllActionableSteps = async () => {
   try {
@@ -59,9 +59,10 @@ static fetchAllActionableSteps = async () => {
   }
 };
 
-  static updateActionableStep = async (stepId: number, stepDetails: string) => {
+  static updateActionableStep = async (stepId: number, payload:any) => {
+    const { step_type, description, scheduled_for, completed } = payload;
     try {
-      const updatedStep = await ActionableStepsRepository.updateActionableStep(stepId, stepDetails);
+      const updatedStep = await ActionableStepsRepository.updateActionableStep(stepId,step_type, description, scheduled_for, completed );
       if (!updatedStep) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Actionable step not found or could not be updated');
       }

@@ -1,6 +1,6 @@
 import express from 'express';
 import { ValidationMiddleware } from '../../../shared/validators/middleware';
-import { createAdminSchema, fetchAdminByEmailSchema, fetchAdminByIdSchema, updateAdminIdSchema, deleteAdminSchema, updateAdminSchema, } from './validation';
+import { createAdminSchema, fetchAdminByEmailSchema, fetchAdminByIdSchema,deleteAdminSchema, updateAdminSchema, } from './validation';
 import { tryCatch } from '../../../shared/helpers/try.catch.helper';
 // import {getUserverifyToken } from "./middleware/verifytoken";
 import { AdminController } from './admin.controller';

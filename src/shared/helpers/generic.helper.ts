@@ -4,12 +4,12 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import Logger from '../../config/logger';
 import Env from '../utils/env';
-import { userQueries } from '../../modules/patient/queries/index';
 import { UserTokenType } from './sanitize.input';
-import { UserRepository } from '../../modules/patient/repository';
 import { ApiError } from '../utils/api.error';
 import { StatusCodes } from 'http-status-codes';
 import axios from 'axios';
+import { UserQueries } from '../../modules/users/user/queries';
+import { AuthRepository } from 'src/modules/authentication/repository';
 //import Env from '../utils/env';
 
 const _logger = new Logger('GenericHelper');
@@ -63,7 +63,7 @@ export class GenericHelper {
     _logger.log(
       ` Finished verifying jwt with data - ${JSON.stringify(userInfo)}`,
     );
-    return await sqlQuest.oneOrNone(userQueries.fetchUser, [userInfo.id]);
+    return await sqlQuest.oneOrNone(UserQueries.fetchUser, [userInfo.id]);
   };
 
   static compareHash = async (text: string, hash: string): Promise<boolean> => {
@@ -102,7 +102,7 @@ export class GenericHelper {
   ): Promise<any> => {
     try {
       // Get the row from the otp table using the userId
-      const otpcheck = await UserRepository.fetchOtp(userId,userType);
+      const otpcheck = await AuthRepository.fetchOtp(userId,userType);
       console.log('====== Fetched User id=====', otpcheck);
 
       console.log("entered OTP", enteredOtp);

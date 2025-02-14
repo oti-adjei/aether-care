@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import Logger from '../../../config/logger';
 import { DoctorService,  } from './service';
 import { StatusCodes } from 'http-status-codes';
-import { fetchDoctorSchema, fetchDoctorByEmailSchema, createDoctorSchema, updateDoctorSchema, deleteDoctorSchema } from './validation';
+import { fetchDoctorSchema, fetchDoctorByEmailSchema, createDoctorSchema, updateDoctorSchema } from './validation';
 
 
 const _logger = new Logger('UserController');
@@ -92,7 +92,7 @@ export class DoctorController {
       const { id } = req.params;
       const updateData = updateDoctorSchema.parse(req.body);
 
-      const doctor = await DoctorService.updateDoctor(parseInt(id), updateData);
+      const doctor = await DoctorService.updateDoctor(id, updateData);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Doctor updated successfully',

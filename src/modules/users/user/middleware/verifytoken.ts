@@ -12,6 +12,16 @@ interface DecodedToken {
     exp: number;
 }
 
+
+export interface User {
+    role: string;
+    id: number
+    email: string
+}
+export interface AuthenticatedRequest extends Request {
+    user?: User;
+}
+
 const _logger = new Logger("Middleware");
 
 export const getUserverifyToken = async (req: Request, _res: Response, next: NextFunction): Promise<any> => {

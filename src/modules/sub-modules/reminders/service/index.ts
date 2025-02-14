@@ -62,9 +62,9 @@ export class RemindersService {
     
   }
 
-  static async updateReminder(req: any) {
+  static async updateReminder(rmeinder_id: number,req: any) {
     try {
-      const reminders = await ReminderRepository.updateReminder(req.params.id, req.body);
+      const reminders = await ReminderRepository.updateReminder(rmeinder_id, req.body);
     if (!reminders) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Reminders not found');
     }
