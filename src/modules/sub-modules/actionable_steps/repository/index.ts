@@ -1,21 +1,11 @@
-import { ResponseHandler } from '../../shared/helpers/response.handler';
-import { Request, Response } from 'express';
-import Logger from '../../config/logger';
-import { UserService } from '../users/user/service';
-import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, 
-  FetchMedicalHistoryByPatientSchema, 
-  CreateMedicalHistorySchema, 
-  UpdateMedicalHistorySchema, 
-  DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+
+import { sqlQuest } from '../../../../config/database';
+import { actionableStepsQueries } from '../queries';
+import Logger from '../../../../config/logger';
+
 
 const _logger = new Logger('Meidcal History');
 
-import { sqlQuest } from '../database/sqlQuest';
-import { _logger } from '../utils/logger';
-import { actionableStepsQueries } from '../queries/actionableStepsQueries';
 
 export class ActionableStepsRepository {
   static async createActionableStep(patientId: number, step: string, dueDate: Date) {
@@ -30,7 +20,7 @@ export class ActionableStepsRepository {
 
   static async fetchActionableSteps(patientId: number) {
     try {
-      const steps = await sqlQuest.manyOrNone(actionableStepsQueries.fetchActionableSteps, [patientId]);
+      const steps = await sqlQuest.manyOrNone(actionableStepsQueries.fetchActionableStep, [patientId]);
       return steps;
     } catch (error) {
       _logger.error('[ActionableStepsRepository]::Something went wrong when fetching actionable steps', error);
@@ -57,4 +47,30 @@ export class ActionableStepsRepository {
       throw error;
     }
   }
+
+  static async  cancelActionableStepsByPatientId(patientId: string): Promise<void> {
+    try {
+      // await actionableStepRepository
+      //   .createQueryBuilder()
+      //   .update(ActionableStep)
+      //   .set({ is_cancelled: true })
+      //   .where('patient_id = :patientId', { patientId })
+      //   .execute();
+
+      const cancel = await sqlQuest.oneOrNone(actionableStepsQueries.cancelActionableStepsByPatientId, [patientId]);
+
+      if (!cancel) {
+        _logger.log(`No actionable steps found for patient ${patientId}`);
+        return;
+      }
+
+      return cancel;
+
+      _logger.log(`Successfully cancelled existing actionable steps for patient ${patientId}`);
+    } catch (error) {
+      _logger.error('Error canceling actionable steps:', error);
+      throw error; // Re-throw the error for handling upstream
+    }
+  }
 }
+

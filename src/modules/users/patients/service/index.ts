@@ -1,8 +1,9 @@
 import { ApiError } from '../../../../shared/utils/api.error';
 import Logger from '../../../../config/logger';
-import { PatientRepository, UserRepository } from '../repository';
+import { PatientRepository } from '../repository';
 import { StatusCodes } from 'http-status-codes';
 import { CreatePatientValidator, UpdatePatientValidator } from '../validation';
+import { UserRepository } from '../../user/repository';
 // import {
 //   sanitizeInput,
 //   NullableString,
@@ -64,11 +65,18 @@ export class PatientService {
 
   static createPatient = async (request: CreatePatientValidator) => {
     try {
+      const { firstName, surname, email, password } = request;
       const existingPatient = await PatientRepository.fetchPatientByEmail(request.email);
       if (existingPatient) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Patient with email already exists');
       }
-      const patient = await PatientRepository.createPatient(request);
+      const user = await UserRepository.createUser(firstName, surname, email, 'patient',password);
+
+      if (!user) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to create patient(user)');
+      }
+
+      const patient = await PatientRepository.createPatient(user.user_id,request);
       if (!patient) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to create patient');
       }
@@ -79,7 +87,7 @@ export class PatientService {
     }
   };
 
-  static updatePatient = async (id: number, request: UpdatePatientValidator) => {
+  static updatePatient = async (id: string, request: UpdatePatientValidator) => {
     try {
       const patient = await PatientRepository.updatePatient(id, request);
       if (!patient) {
@@ -92,7 +100,7 @@ export class PatientService {
     }
   };
 
-  static deletePatient = async (id: number) => {
+  static deletePatient = async (id: string) => {
     try {
       const patient = await PatientRepository.deletePatient(id);
       if (!patient) {

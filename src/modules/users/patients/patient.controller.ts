@@ -93,7 +93,7 @@ export class PatientController {
 
   static updatePatient = async (req: Request, res: Response) => {
     try {
-      const { id } = updatePatientSchema.parse(req.params);
+      const { id } = req.params;
       const updateData = updatePatientSchema.parse(req.body);
 
       const patient = await PatientService.updatePatient(id, updateData);
@@ -114,9 +114,9 @@ export class PatientController {
 
   static deletePatient = async (req: Request, res: Response) => {
     try {
-      const { id } = deletePatientSchema.parse(req.params);
+      const { patient_id } = deletePatientSchema.parse(req.params);
 
-      await PatientService.deletePatient(id);
+      await PatientService.deletePatient(patient_id);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Patient deleted successfully',

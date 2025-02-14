@@ -12,20 +12,26 @@ export const fetchPatientByEmailSchema = z.object({
 
 // Schema for creating a patient
 export const createPatientSchema = z.object({
-  name: z.string().min(3).max(100),
+  firstName: z.string().min(3).max(100),
+  surname: z.string().min(3).max(100),
   email: z.string().email(),
   phone: z.string().min(10).max(15),
   date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // Format: YYYY-MM-DD
   gender: z.enum(['male', 'female', 'other']),
+  medical_history: z.string().optional(),
+  password: z.string().min(6).max(100),
 });
 
 // Schema for updating a patient
 export const updatePatientSchema = z.object({
-  name: z.string().min(3).max(100).optional(),
+  firstName: z.string().min(3).max(100).optional(),
+  surname: z.string().min(3).max(100).optional(),
   email: z.string().email().optional(),
   phone: z.string().min(10).max(15).optional(),
   date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   gender: z.enum(['male', 'female', 'other']).optional(),
+  medical_history: z.string().optional(),
+  password: z.string().min(6).max(100).optional(),
 });
 
 // Schema for deleting a patient

@@ -1,26 +1,17 @@
-import { ResponseHandler } from '../../shared/helpers/response.handler';
-import { Request, Response } from 'express';
-import Logger from '../../config/logger';
-import { UserService } from '../users/user/service';
-import { StatusCodes } from 'http-status-codes';
-import {  FetchMedicalHistoryByIdSchema, 
-  FetchMedicalHistoryByPatientSchema, 
-  CreateMedicalHistorySchema, 
-  UpdateMedicalHistorySchema, 
-  DeleteMedicalHistorySchema  } from './validation';
-import { TotpHelper } from '../../shared/helpers/totpHelper';
-import { AuthService } from './service';
+import { sqlQuest } from '../../../../config/database';
+import { doctorNoteQueries } from '../queries';
+import Logger from '../../../../config/logger';
+
 
 const _logger = new Logger('Meidcal History');
 
-import { sqlQuest } from '../database/sqlQuest';
-import { _logger } from '../utils/logger';
-import { doctorNoteQueries } from '../queries/doctorNoteQueries';
+
+
 
 export class DoctorNoteRepository {
-  static async createDoctorNote(patientId: number, doctorId: number, note: string) {
+  static async createDoctorNote(patientId: string, doctorId: string, note: string,iv: string) {
     try {
-      const doctorNote = await sqlQuest.one(doctorNoteQueries.createDoctorNote, [patientId, doctorId, note]);
+      const doctorNote = await sqlQuest.one(doctorNoteQueries.createDoctorNote, [patientId, doctorId, note,iv]);
       return doctorNote;
     } catch (error) {
       _logger.error('[DoctorNoteRepository]::Something went wrong when creating doctor note', error);
@@ -30,7 +21,7 @@ export class DoctorNoteRepository {
 
   static async fetchDoctorNoteById(noteId: number) {
     try {
-      const doctorNote = await sqlQuest.oneOrNone(doctorNoteQueries.fetchDoctorNoteById, [noteId]);
+      const doctorNote = await sqlQuest.oneOrNone(doctorNoteQueries.fetchDoctorNote, [noteId]);
       return doctorNote;
     } catch (error) {
       _logger.error('[DoctorNoteRepository]::Something went wrong when fetching doctor note by ID', error);
@@ -40,10 +31,20 @@ export class DoctorNoteRepository {
 
   static async fetchDoctorNotesByPatient(patientId: number) {
     try {
-      const doctorNotes = await sqlQuest.manyOrNone(doctorNoteQueries.fetchDoctorNotesByPatient, [patientId]);
+      const doctorNotes = await sqlQuest.manyOrNone(doctorNoteQueries.fetchDOctorNotesByPatient, [patientId]);
       return doctorNotes;
     } catch (error) {
       _logger.error('[DoctorNoteRepository]::Something went wrong when fetching doctor notes by patient', error);
+      throw error;
+    }
+  }
+
+  static async fetchAllDoctorNotes() {
+    try {
+      const doctorNotes = await sqlQuest.manyOrNone(doctorNoteQueries.fetchAllDoctorNotes);
+      return doctorNotes;
+    } catch (error) {
+      _logger.error('[DoctorNoteRepository]::Something went wrong when fetching all doctor notes', error);
       throw error;
     }
   }
@@ -70,7 +71,7 @@ export class DoctorNoteRepository {
 
   static async softDeleteDoctorNote(noteId: number) {
     try {
-      const softDeletedDoctorNote = await sqlQuest.oneOrNone(doctorNoteQueries.softDeleteDoctorNote, [noteId]);
+      const softDeletedDoctorNote = await sqlQuest.oneOrNone(doctorNoteQueries.deleteDoctorNote, [noteId]);
       return softDeletedDoctorNote;
     } catch (error) {
       _logger.error('[DoctorNoteRepository]::Something went wrong when soft deleting doctor note', error);
@@ -84,6 +85,26 @@ export class DoctorNoteRepository {
       return restoredDoctorNote;
     } catch (error) {
       _logger.error('[DoctorNoteRepository]::Something went wrong when restoring doctor note', error);
+      throw error;
+    }
+  }
+
+  static async fetchDeletedDoctorNotes() {
+    try {
+      const deletedDoctorNotes = await sqlQuest.manyOrNone(doctorNoteQueries.fetchDeletedDoctorNotes);
+      return deletedDoctorNotes;
+    } catch (error) {
+      _logger.error('[DoctorNoteRepository]::Something went wrong when fetching deleted doctor notes', error);
+      throw error;
+    }
+  }
+
+  static async fetchDeletedDoctorNotesByPatient(patientId: string) {
+    try {
+      const deletedDoctorNotes = await sqlQuest.manyOrNone(doctorNoteQueries.fetchDeletedDoctorNotesByPatient, [patientId]);
+      return deletedDoctorNotes;
+    } catch (error) {
+      _logger.error('[DoctorNoteRepository]::Something went wrong when fetching deleted doctor notes by patient', error);
       throw error;
     }
   }

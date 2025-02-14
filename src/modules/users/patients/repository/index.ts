@@ -1,7 +1,7 @@
-import { UserAccount, UserAccountEmail, } from '../../../../shared/helpers/sanitize.input';
 import { sqlQuest } from '../../../../config/database';
 import Logger from '../../../../config/logger';
 import { patientQueries } from '../queries';
+import { CreatePatientValidator, UpdatePatientValidator } from '../validation';
 
 
 const _logger = new Logger('UserRepository');
@@ -14,8 +14,9 @@ export class PatientRepository {
   // experience INTEGER CHECK (experience >= 0),
   // license_number VARCHAR(50) UNIQUE NOT NULL,
   // created_at TIMESTAMP DEFAULT NOW()
-  static async createPatient(user_id:string,date_of_birth:string,medical_history:string) {
+  static async createPatient(user_id:string,request : CreatePatientValidator) {
     try {
+      const {date_of_birth,medical_history} = request;
       const patient = await sqlQuest.one(patientQueries.createPatient, [user_id,date_of_birth,medical_history]);
       return patient;
     } catch (error) {
@@ -54,8 +55,9 @@ export class PatientRepository {
     }
   }
 
-  static async updatePatient(user_id:number,date_of_birth:string,medical_history:string) {
+  static async updatePatient(user_id:string,request : UpdatePatientValidator) {
     try {
+      const {date_of_birth,medical_history} = request;
       const updatedPatient = await sqlQuest.one(patientQueries.updatePatient, [user_id,date_of_birth,medical_history]);
       return updatedPatient;
     } catch (error) {
@@ -64,7 +66,7 @@ export class PatientRepository {
     }
   }
 
-  static async deletePatient(patientId: number) {
+  static async deletePatient(patientId: string) {
     try {
       const deletedPatient = await sqlQuest.oneOrNone(patientQueries.deletePatient, [patientId]);
       return deletedPatient;
