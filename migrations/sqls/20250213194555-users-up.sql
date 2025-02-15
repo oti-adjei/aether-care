@@ -8,6 +8,6 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role VARCHAR(50) CHECK (role IN ('doctor', 'patient', 'admin')) NOT NULL,
-    is_verified BOOLEAN DEFAULT false
+    is_verified BOOLEAN DEFAULT false,
     created_at TIMESTAMP DEFAULT NOW()
 );
