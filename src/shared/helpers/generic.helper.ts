@@ -1,7 +1,12 @@
 import crypto from 'crypto';
 import { sqlQuest } from '../../config/database';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+
+import { Secret, sign } from 'jsonwebtoken';
+
+
+
 import Logger from '../../config/logger';
 import Env from '../utils/env';
 import { UserTokenType } from './sanitize.input';
@@ -89,11 +94,26 @@ export class GenericHelper {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  static hashOtp = (otp: number, secret: string, expTime: string): string => {
-    return jwt.sign({ otp }, secret, {
-      expiresIn: expTime,
-    });
+  // static hashOtp = (otp: number, secret: Secret, expTime: string | number): string => {
+  //   const options: SignOptions = { 
+  //     expiresIn: typeof expTime === 'number' 
+  //       ? expTime 
+  //       : Math.floor(ms(expTime as ms.StringValue) / 1000)
+  //   };
+  //   return sign({ otp }, secret, options);
+  // };
+
+
+  
+  static hashOtp = (otp: number, secret: Secret): string => {
+    return sign(
+      { otp }, 
+      secret, 
+      { expiresIn: '5m' } 
+    );
   };
+
+
   static verifyOtp = async (
     enteredOtp: number,
     secret: string,

@@ -3,7 +3,6 @@ import Logger from '../../../config/logger';
 // import { StatusCodes } from 'http-status-codes';
 import { sqlQuest } from '../../../config/database';
 import { authQueries } from '../queries';
-import { UserAccount, UserAccountEmail } from 'src/shared/helpers/sanitize.input';
 
 
 const _logger = new Logger('AuthRepository');
@@ -34,7 +33,7 @@ export class AuthRepository {
 
     static getUserByPhoneNumber = async (
       phoneNumber: string,
-    ): Promise<UserAccount> => {
+    ): Promise<any> => {
       try {
         const user = await sqlQuest.oneOrNone(authQueries.getUserByPhoneNumber, [
           phoneNumber,
@@ -52,7 +51,7 @@ export class AuthRepository {
   
     static checkIfUserExists = async (
       email: string,
-    ): Promise<UserAccountEmail> => {
+    ): Promise<any> => {
       try {
         const userExists = await sqlQuest.oneOrNone(
           authQueries.checkIfUserExists,

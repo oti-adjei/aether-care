@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import Logger from '../../config/logger';
 import { UserService } from '../users/user/service';
 import { StatusCodes } from 'http-status-codes';
-import { SendPhoneNumberOtpValidator, VerifyPhoneNumberOtpValidator, SendUserType, } from './validation';
+import { SendPhoneNumberOtpValidator, VerifyPhoneNumberOtpValidator } from './validation';
 import { TotpHelper } from '../../shared/helpers/totpHelper';
 import { AuthService } from './service';
 
@@ -85,7 +85,7 @@ export class AuthController {
   
       // Step 5: If login is successful, return user data
       const response = new ResponseHandler(req, res);
-      response.success({
+      return response.success({
         message: 'User logged in successfully',
         code: StatusCodes.OK,
         data: user,
@@ -96,6 +96,7 @@ export class AuthController {
         error
       );
       throw error;
+      return;
     }
   };
 
@@ -103,7 +104,7 @@ export class AuthController {
     try {
       _logger.log('[UserController]::Sending phone number otp');
       const payload = req.body as SendPhoneNumberOtpValidator;
-      const type = payload.type;
+      // const type = payload.type;
         const otp = await AuthService.sendPhoneNumberOtp(payload);
 
       const response = new ResponseHandler(req, res);
@@ -126,7 +127,7 @@ export class AuthController {
       _logger.log('[UserController]::Verifying phone number otp');
       const payload = req.body as VerifyPhoneNumberOtpValidator;
       const userId = (req as any).userId;
-      const type = payload.type;
+      // const type = payload.type;
       const user  = await AuthService.verifyPhoneNumberOtp(payload,userId);
       
 

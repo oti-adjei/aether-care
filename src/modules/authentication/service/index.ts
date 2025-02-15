@@ -91,7 +91,7 @@ export class AuthService {
           const hashedOtp = GenericHelper.hashOtp(
             otp,
             Env.get('ENVOYER_SECRET'),
-            '5m',
+            
           );
           console.log("========hashed otp no nie",hashedOtp);
           await AuthRepository.upadteOtp(user.id, hashedOtp,type);
