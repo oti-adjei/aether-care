@@ -75,7 +75,7 @@ export class DoctorService {
       const user = await UserRepository.createUser(first_name,surname, email, password, 'doctor');
 
       //create doctor
-      const doctor = await DoctorRepository.createDoctor(user.user_id,experience,specialty,license_number);
+      const doctor = await DoctorRepository.createDoctor(user.user_id, specialty,experience,license_number);
       if (!doctor) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to create doctor');
       }
@@ -85,6 +85,42 @@ export class DoctorService {
       throw error;
     }
   };
+
+/*  test this see if it works
+static createDoctor = async (request: CreateDoctorValidator) => {
+  const client = await sqlQuest.getConnection(); // Get transaction client
+
+  try {
+    return await client.tx(async (transaction) => {
+      const { first_name, surname, email, specialty, password, experience, license_number } = request;
+
+      // Step 1: Check if the doctor already exists
+      const existingDoctor = await transaction.oneOrNone(DoctorQueries.checkIfDoctorExists, [email]);
+      if (existingDoctor) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Doctor already exists');
+      }
+
+      // Step 2: Create User first
+      const user = await transaction.one(UserQueries.createUser, [
+        first_name, surname, email, password, 'doctor'
+      ]);
+
+      // Step 3: Create Doctor record
+      const doctor = await transaction.one(DoctorQueries.createDoctor, [
+        user.user_id, specialty, experience, license_number
+      ]);
+
+      return doctor; // Return doctor details on success
+    });
+
+  } catch (error) {
+    _logger.error('[DoctorService]::Transaction failed', error);
+    throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Doctor creation failed');
+  } finally {
+    client.release();
+  }
+};*/
+
 
   static updateDoctor = async (user_id: string, request: UpdateDoctorValidator) => {
     try {

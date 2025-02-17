@@ -3,8 +3,17 @@ export const UserQueries = {
   fetchUser: `SELECT * FROM users WHERE user_id = $1;`,
   fetchAllUsers: `SELECT * FROM users;`,
   fetchUserByEmail: `SELECT * FROM users WHERE email = $1;`,
-  updateUser: `UPDATE users SET name = COALESCE($1, name), email = COALESCE($2, email), password = COALESCE($3, password) WHERE user_id = $4 RETURNING *;`,
-  deleteUser: `UPDATE users SET deleted_at = NOW() WHERE user_id = $1 RETURNING *;`,
+  updateUser: `
+  UPDATE users 
+  SET 
+      first_name = COALESCE($1, first_name),
+      surname = COALESCE($2, surname),
+      email = COALESCE($3, email),
+      password = COALESCE($4, password)
+  WHERE user_id = $5
+  RETURNING *
+`,
+  deleteUser: `UPDATE users SET created_at = NOW() WHERE user_id = $1 RETURNING *;`,
   checkIfUserExists: `SELECT * FROM users WHERE email = $1;`,
     // storeOtp: `INSERT INTO user_otps (user_id, type) VALUES ($1, $2) RETURNING *;`,
   // fetchOtp: `SELECT otp FROM user_otps WHERE user_id = $1 AND type = $2;`,

@@ -32,7 +32,7 @@ router.post(
   tryCatch(UsersController.createUser),
 );
 
-router.put(
+router.patch(
   '/:user_id',
   validateRequest(updateUserSchema),
   tryCatch(UsersController.updateUser),

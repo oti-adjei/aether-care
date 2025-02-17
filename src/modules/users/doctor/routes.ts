@@ -15,7 +15,7 @@ router.get(
 );
 
 router.get(
-  '/all/users',
+  '/all/doctors',
   tryCatch(DoctorController.fetchAllDoctors),
 );
 
@@ -26,7 +26,7 @@ router.get(
 );
 
 router.post(
-  '/users',
+  '/',
   validateRequest(createDoctorSchema),
   tryCatch(DoctorController.createDoctor),
 );
@@ -43,4 +43,4 @@ router.delete(
   tryCatch(DoctorController.deleteDoctor),
 );
 
-export const userRouter = router;
+export const doctorRouter = router;

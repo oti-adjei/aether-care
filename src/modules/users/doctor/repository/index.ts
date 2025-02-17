@@ -33,19 +33,17 @@ export class DoctorRepository {
     }
   }
   static createDoctor = async (
-    user_id: number,
-    // phone_number: string,
-    experience: number,
+    user_id: string,
     specialty: string,
+    experience: number,
     license_number: string
   ) => {
     try {
       const doctor = await sqlQuest.one(doctorQueries.createDoctor, [
         user_id,
-        // phone_number,
-        experience,
-        specialty,
-        license_number,
+        specialty,     // Changed: moved to match SQL order
+        experience,    // Changed: moved to match SQL order
+        license_number
       ]);
       return doctor;
     } catch (error) {

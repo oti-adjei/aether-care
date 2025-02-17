@@ -11,7 +11,7 @@ import {
 const _logger = new Logger('UserService');
 
 export class UserService {
-  static fetchUserById = async (id: number) => {
+  static fetchUserById = async (id: string) => {
     try {
       const user = await UserRepository.fetchUserById(id);
       if (!user) {
@@ -68,10 +68,10 @@ export class UserService {
     }
   };
 
-  static updateUser = async (id: string, request: UpdateUserValidator) => {
-    const {firstName, surname, email, password} = request
+  static updateUser = async (user_id: string, request: UpdateUserValidator) => {
+    const {first_name, surname, email, password} = request
     try {
-      const user = await UserRepository.updateUser(id, firstName, surname, email, password);
+      const user = await UserRepository.updateUser(user_id, first_name, surname, email, password);
       if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
       }
@@ -82,9 +82,9 @@ export class UserService {
     }
   };
 
-  static deleteUser = async (id: number) => {
+  static deleteUser = async (user_id: string) => {
     try {
-      const user = await UserRepository.deleteUser(id);
+      const user = await UserRepository.deleteUser(user_id);
       if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
       }

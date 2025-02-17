@@ -22,8 +22,8 @@ export const fetchUserByEmailSchema = z.object({
 export const fetchAllUsersSchema = z.object({});
 
 export const updateUserSchema = z.object({
-  userId: z.string().uuid(),
-  firstName: z.string().min(1).max(255).optional(),
+  // user_id: z.string().uuid(),
+  first_name: z.string().min(1).max(255).optional(),
   surname: z.string().min(1).max(255).optional(),
   email: z.string().email().optional(),
   password: z.string().min(6).optional(),
@@ -32,11 +32,11 @@ export const updateUserSchema = z.object({
 });
 
 export const deleteUserSchema = z.object({
-  userId: z.string().uuid(),
+  user_id: z.string().uuid(),
 });
 
 export const RestoreUserSchema = z.object({
-  userId: z.string().uuid(),
+  user_id: z.string().uuid(),
 });
 
 

@@ -32,7 +32,7 @@ export class UserRepository {
     }
   };
 
-  static fetchUserById = async (user_id: number) => {
+  static fetchUserById = async (user_id: string) => {
     try {
       const user = await sqlQuest.oneOrNone(UserQueries.fetchUser, [user_id]);
       return user;
@@ -79,7 +79,7 @@ export class UserRepository {
     password?: string
   ) => {
     try {
-      const user = await sqlQuest.one(UserQueries.updateUser, [
+      const user = await sqlQuest.oneOrNone(UserQueries.updateUser, [
         first_name,
         surname,
         email,
@@ -96,7 +96,7 @@ export class UserRepository {
     }
   };
 
-  static deleteUser = async (user_id: number) => {
+  static deleteUser = async (user_id: string) => {
     try {
       const user = await sqlQuest.oneOrNone(UserQueries.deleteUser, [user_id]);
       return user;
