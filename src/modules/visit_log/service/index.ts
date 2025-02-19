@@ -1,4 +1,4 @@
-import { ApiError } from 'src/shared/utils/api.error';
+import { ApiError } from '../../../shared/utils/api.error';
 import Logger from '../../../config/logger';
 
 import { StatusCodes } from 'http-status-codes';

@@ -66,22 +66,22 @@ export class AdminService {
   static createAdmin = async (request: CreateAdminValidator) => {
     try {
       const {
-        firstName,
+        first_name,
         surname,
         email,
-        phone,
+        // phone,
         password,
       } = request;
       const existingAdmin = await AdminRepository.fetchAdminByEmail(request.email);
       if (existingAdmin) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Admin with email already exists');
       }
-      const user = await UserRepository.createUser(firstName,surname, email,phone, password);
+      const user = await UserRepository.createUser(first_name,surname, email, password, 'admin');
       
       if (!user) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to create admin');
       }
-      const admin = await AdminRepository.createAdmin(firstName, surname, email, phone, password);
+      const admin = await AdminRepository.createAdmin(user.user_id, 'admin');
       return admin;
     } catch (error) {
       _logger.error('[AdminService]::Error creating admin', error);
@@ -92,14 +92,33 @@ export class AdminService {
   static updateAdmin = async (id: string, request: UpdateAdminValidator) => {
     try {
       const {
-        firstName,
+        first_name,
         surname,
         email,
         // phone,
         password,
       } = request;
 
-      const admin = await UserRepository.updateUser(id, firstName,surname, email, password);
+      let existingAdmin;
+
+      if (email) {
+        existingAdmin = await AdminRepository.fetchAdminByEmail(email);
+      }
+      else {
+        existingAdmin = await AdminRepository.fetchAdmin(id);
+      }
+
+      if (!existingAdmin) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Admin not found');
+      }
+
+      const user = await UserRepository.updateUser(id, first_name,surname, email, password);
+
+      if (!user) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to update admin(user)');
+      }
+
+      const admin = await UserRepository.updateUser(id, first_name,surname, email, password);
       if (!admin) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Admin not found');
       }
@@ -111,8 +130,12 @@ export class AdminService {
     }
   };
 
-  static deleteAdmin = async (id: number) => {
+  static deleteAdmin = async (id: string) => {
     try {
+      const user = await UserRepository.deleteUser(id);
+      if (!user) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+      }
       const admin = await AdminRepository.deleteAdmin(id);
       if (!admin) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Admin not found');

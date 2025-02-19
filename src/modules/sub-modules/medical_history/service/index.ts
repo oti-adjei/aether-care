@@ -1,7 +1,7 @@
 
 import Logger from '../../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
-import { ApiError } from 'src/shared/utils/api.error';
+import { ApiError } from '../../../../shared/utils/api.error';
 import { MedicalHistoryRepository } from '../repository';
 import { CreateMedicalHistoryValidator, UpdateMedicalHistoryValidator } from '../validation';
 

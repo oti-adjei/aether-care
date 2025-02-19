@@ -1,6 +1,6 @@
 import Logger from '../../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
-import { ApiError } from 'src/shared/utils/api.error';
+import { ApiError } from '../../../../shared/utils/api.error';
 import { DoctorNoteRepository } from '../repository';
 import { CreateDoctorNoteValidator, UpdateDoctorNoteValidator } from '../validation';
 import { scheduleReminders } from '../../reminders/middleware/schedule_task';
@@ -168,9 +168,12 @@ export class DoctorNoteService {
         const dueDate = step.due_date ? new Date(step.due_date) : null;
         if (dueDate !== null) {
           await ActionableStepsRepository.createActionableStep(
+            patient_id,
             newNote.id,
             step.step_type,
-            dueDate
+            step.description,
+            dueDate,
+            "pending"
           );
         } else {
           // Handle the case where dueDate is null

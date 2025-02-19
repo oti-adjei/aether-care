@@ -12,7 +12,7 @@ export const fetchAdminByEmailSchema = z.object({
 
 // Schema for creating an admin
 export const createAdminSchema = z.object({
-  firstName: z.string().min(3).max(100),
+  first_name: z.string().min(3).max(100),
   surname: z.string().min(3).max(100),
   email: z.string().email(),
   phone: z.string().min(10).max(15),
@@ -25,7 +25,7 @@ export const updateAdminIdSchema = z.object({
   admin_id: z.string().uuid(),
 });
 export const updateAdminSchema = z.object({
-  firstName: z.string().min(3).max(100).optional(),
+  first_name: z.string().min(3).max(100).optional(),
   surname: z.string().min(3).max(100).optional(),
   email: z.string().email().optional(),
   phone: z.string().min(10).max(15).optional(),

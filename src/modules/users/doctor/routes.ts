@@ -38,7 +38,7 @@ router.put(
 );
 
 router.delete(
-  '/:id',
+  '/:doctor_id',
   validateRequest(deleteDoctorSchema),
   tryCatch(DoctorController.deleteDoctor),
 );

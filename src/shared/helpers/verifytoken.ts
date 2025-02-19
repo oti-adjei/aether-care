@@ -14,6 +14,8 @@ interface DecodedToken {
 
 const _logger = new Logger("Middleware");
 
+//TODO : Need to add error handling for if no authorization. Request hangs forever
+
 export const getUserverifyToken = async (req: Request, _res: Response, next: NextFunction): Promise<any> => {
     const token = req.headers['authorization']?.split(' ')[1];
     console.log(token);
@@ -31,7 +33,7 @@ export const getUserverifyToken = async (req: Request, _res: Response, next: Nex
             '[Middleware]::Something went wrong getting user_id from token',
             error,
           );
-          throw error;
+          throw new ApiError(StatusCodes.NOT_FOUND, 'No authorization', error);
     }
 };
 

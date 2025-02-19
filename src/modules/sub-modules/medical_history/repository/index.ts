@@ -8,9 +8,9 @@ const _logger = new Logger('Meidcal History');
 
 export class MedicalHistoryRepository {
   static async createMedicalHistory(request: any) {
-    const { patientId, diagnosis, treatment, notes, recordedBy } = request;
+    const { patient_id, doctor_id,diagnosis, treatment, notes, diagnosed_at } = request;
     try {
-      const medicalHistory = await sqlQuest.one(medicalHistoryQueries.createMedicalHistory, [patientId, diagnosis, treatment, notes, recordedBy]);
+      const medicalHistory = await sqlQuest.one(medicalHistoryQueries.createMedicalHistory, [patient_id, doctor_id, diagnosis, treatment, notes, diagnosed_at]);
       return medicalHistory;
     } catch (error) {
       _logger.error('[MedicalHistoryRepository]::Something went wrong when creating medical history', error);

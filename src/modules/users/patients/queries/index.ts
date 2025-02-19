@@ -1,9 +1,10 @@
 export const patientQueries = {
-  createPatient: `INSERT INTO patients (first_name, surname, email, date_of_birth) VALUES ($1, $2, $3, $4) RETURNING *;`,
-  fetchPatient: `SELECT * FROM patients WHERE id = $1;`,
-  fetchPatientByEmail: `SELECT * FROM patients WHERE email = $1;`,
+  createPatient: `INSERT INTO patients ( user_id,date_of_birth,medical_history,gender) VALUES ($1, $2, $3, $4) RETURNING *;`,
+  fetchPatient: `SELECT u.*, d.* FROM patients d INNER JOIN users u ON d.user_id = u.user_id WHERE u.user_id = $1;
+`,
+  fetchPatientByEmail: `SELECT d.* FROM patients d INNER JOIN users u ON d.user_id = u.user_id WHERE u.email = $1;`,
   fetchAllPatients: `SELECT * FROM patients;`,
-  updatePatient: `UPDATE patients SET first_name = $1, surname = $2, email = $3, date_of_birth = $4 WHERE id = $5 RETURNING *;`,
-  deletePatient: `UPDATE patients SET deleted_at = NOW() WHERE id = $1 RETURNING *;`,
-  restorePatient: `UPDATE patients SET deleted_at = NULL WHERE id = $1 RETURNING *;`
+  updatePatient: `UPDATE patients SET date_of_birth = COALESCE($1, date_of_birth), medical_history = COALESCE($2, medical_history), gender = COALESCE($3, gender) WHERE user_id = $4 RETURNING *;`,
+  deletePatient: `DELETE FROM patients WHERE user_id = $1 RETURNING *;`,
+  // restorePatient: `UPDATE patients SET deleted_at = NULL WHERE id = $1 RETURNING *;`
 };

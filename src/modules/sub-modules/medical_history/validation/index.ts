@@ -17,7 +17,7 @@ export const createMedicalHistorySchema = z.object({
   diagnosis: z.string().min(3).max(500),
   treatment: z.string().min(3).max(500),
   notes: z.string().optional(),
-  recorded_at: z.string().datetime().optional(),
+  diagnosed_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
 // Schema for updating a medical history record

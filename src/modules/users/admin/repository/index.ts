@@ -36,9 +36,9 @@ export class AdminRepository {
     }
   }
 
-  static async createAdmin(firstName: string, lastName: string, email: string, phoneNumber: string, role: string) {
+  static async createAdmin(user_id:string, role: string) {
     try {
-      const admin = await sqlQuest.one(adminQueries.createAdmin, [firstName, lastName, email, phoneNumber, role]);
+      const admin = await sqlQuest.one(adminQueries.createAdmin, [user_id, role]);
       return admin;
     } catch (error) {
       _logger.error('[AdminRepository]::Something went wrong when creating admin', error);
@@ -47,9 +47,9 @@ export class AdminRepository {
   }
 
 
-  static async updateAdmin(adminId: number, firstName: string | null, lastName: string | null, email: string | null, phoneNumber: string | null, role: string | null) {
+  static async updateAdmin(adminId: number, firstName: string | null, surname: string | null, email: string | null, phoneNumber: string | null, role: string | null) {
     try {
-      const updatedAdmin = await sqlQuest.one(adminQueries.updateAdmin, [firstName, lastName, email, phoneNumber, role, adminId]);
+      const updatedAdmin = await sqlQuest.one(adminQueries.updateAdmin, [firstName, surname, email, phoneNumber, role, adminId]);
       return updatedAdmin;
     } catch (error) {
       _logger.error('[AdminRepository]::Something went wrong when updating admin', error);
@@ -57,7 +57,7 @@ export class AdminRepository {
     }
   }
 
-  static async deleteAdmin(adminId: number) {
+  static async deleteAdmin(adminId: string) {
     try {
       const deletedAdmin = await sqlQuest.oneOrNone(adminQueries.deleteAdmin, [adminId]);
       return deletedAdmin;

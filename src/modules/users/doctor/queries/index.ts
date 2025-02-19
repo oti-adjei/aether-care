@@ -4,7 +4,7 @@ export const doctorQueries = {
   // fetchDoctorByEmail: `SELECT * FROM doctors WHERE email = $1;`,
   fetchDoctorByEmail: `SELECT d.* FROM doctors d INNER JOIN users u ON d.user_id = u.user_id WHERE u.email = $1;`,
   fetchAllDoctors: `SELECT * FROM doctors;`,
-  updateDoctor: `UPDATE doctors SET experience = $1, specialty = $2, license_number = $3, WHERE user_id = $4 RETURNING *;`,
+  updateDoctor: `UPDATE doctors SET experience = COALESCE($1, experience), specialty = COALESCE($2, specialty), license_number = COALESCE($3, license_number) WHERE user_id = $4 RETURNING *;`,
   deleteDoctor: `DELETE FROM doctors WHERE user_id = $1 RETURNING *;`,
   // deleteDoctor: `UPDATE doctors SET deleted_at = NOW() WHERE user_id = $1 RETURNING *;`,
   // restoreDoctor: `UPDATE doctors SET deleted_at = NULL WHERE user_id = $1 RETURNING *;`

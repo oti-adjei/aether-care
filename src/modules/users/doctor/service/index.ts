@@ -130,6 +130,9 @@ static createDoctor = async (request: CreateDoctorValidator) => {
       if (email) {
        existingDoctor = await DoctorRepository.checkIfDoctorExists(email);
       }
+      else{
+        existingDoctor = await DoctorRepository.fetchDoctor(user_id);
+      }
       if (!existingDoctor) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Doctor not found');
       }
@@ -149,6 +152,10 @@ static createDoctor = async (request: CreateDoctorValidator) => {
 
   static deleteDoctor = async (user_id: string) => {
     try {
+      const user = await UserRepository.deleteUser(user_id);
+      if (!user) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+      }
       const doctor = await DoctorRepository.deleteDoctor(user_id);
       if (!doctor) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Doctor not found');

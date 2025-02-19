@@ -8,15 +8,54 @@ const _logger = new Logger('Meidcal History');
 
 
 export class ActionableStepsRepository {
-  static async createActionableStep(patientId: number, step: string, dueDate: Date) {
+  // static async createActionableStep(patientId: string,note_id:string, step_type: string,description: string, dueDate: Date,status: string) {
+  //   try {
+  //     //if status is completed set completed to true else false
+  //     let completed;
+  //     if(status === 'completed'){
+  //        completed = true;
+  //     }
+  //     else{
+  //        completed = false;
+  //     }
+  //     const actionableStep = await sqlQuest.one(actionableStepsQueries.createActionableStep, [patientId,note_id, step_type,description, dueDate,completed,status]);
+  //     return actionableStep;
+  //   } catch (error) {
+  //     _logger.error('[ActionableStepsRepository]::Something went wrong when creating actionable step', error);
+  //     throw error;
+  //   }
+  // }
+
+  static async createActionableStep(
+    patientId: string, 
+    note_id: string, 
+    step_type: string, 
+    description: string, 
+    dueDate: Date, 
+    status: string
+  ) {
     try {
-      const actionableStep = await sqlQuest.one(actionableStepsQueries.createActionableStep, [patientId, step, dueDate]);
+      // Determine `completed` based on `status`
+      let completed = status === 'completed';
+
+      //print all values
+      console.log("======VALUES======");
+      console.log(patientId, note_id, step_type, description, dueDate, completed, status);
+
+  
+      // Ensure order matches SQL query placeholders
+      const actionableStep = await sqlQuest.one(
+        actionableStepsQueries.createActionableStep, 
+        [patientId, note_id, step_type, description, dueDate, completed, status]
+      );
+  
       return actionableStep;
     } catch (error) {
-      _logger.error('[ActionableStepsRepository]::Something went wrong when creating actionable step', error);
+      _logger.error('[ActionableStepsRepository]::Error creating actionable step', error);
       throw error;
     }
   }
+  
 
   static async fetchActionableSteps(patientId: number) {
     try {

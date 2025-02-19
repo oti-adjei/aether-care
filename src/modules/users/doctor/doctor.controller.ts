@@ -110,9 +110,9 @@ export class DoctorController {
 
   static deleteDoctor = async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { doctor_id } = req.params;
 
-      await DoctorService.deleteDoctor(id);
+      await DoctorService.deleteDoctor(doctor_id);
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Doctor deleted successfully',

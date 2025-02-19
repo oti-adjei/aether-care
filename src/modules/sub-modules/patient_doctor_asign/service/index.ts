@@ -1,5 +1,5 @@
 
-import { ApiError } from 'src/shared/utils/api.error';
+import { ApiError } from '../../../../shared/utils/api.error';
 import Logger from '../../../../config/logger';
 import { StatusCodes } from 'http-status-codes';
 import { PatientDoctorAssignmentRepository } from '../repository';
@@ -9,9 +9,12 @@ const _logger = new Logger('Meidcal History');
 
 export class PatientDoctorAssignmentService {
   static assignDoctorToPatient = async (request:any) => {
-    const { patientId, doctorId } = request.body;
+    const { patient_id, doctor_id } = request;
     try {
-      const assignment = await PatientDoctorAssignmentRepository.assignDoctorToPatient(patientId, doctorId);
+
+      console.log("======VALUES======");
+      console.log(request)
+      const assignment = await PatientDoctorAssignmentRepository.assignDoctorToPatient(patient_id, doctor_id);
       if (!assignment) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to assign doctor to patient');
       }

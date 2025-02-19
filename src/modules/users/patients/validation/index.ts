@@ -12,7 +12,7 @@ export const fetchPatientByEmailSchema = z.object({
 
 // Schema for creating a patient
 export const createPatientSchema = z.object({
-  firstName: z.string().min(3).max(100),
+  first_name: z.string().min(3).max(100),
   surname: z.string().min(3).max(100),
   email: z.string().email(),
   phone: z.string().min(10).max(15),
@@ -24,7 +24,7 @@ export const createPatientSchema = z.object({
 
 // Schema for updating a patient
 export const updatePatientSchema = z.object({
-  firstName: z.string().min(3).max(100).optional(),
+  first_name: z.string().min(3).max(100).optional(),
   surname: z.string().min(3).max(100).optional(),
   email: z.string().email().optional(),
   phone: z.string().min(10).max(15).optional(),

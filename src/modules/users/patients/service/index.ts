@@ -65,12 +65,12 @@ export class PatientService {
 
   static createPatient = async (request: CreatePatientValidator) => {
     try {
-      const { firstName, surname, email, password } = request;
+      const { first_name, surname, email, password } = request;
       const existingPatient = await PatientRepository.fetchPatientByEmail(request.email);
       if (existingPatient) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Patient with email already exists');
       }
-      const user = await UserRepository.createUser(firstName, surname, email, 'patient',password);
+      const user = await UserRepository.createUser(first_name, surname, email, password,'patient');
 
       if (!user) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to create patient(user)');
@@ -89,9 +89,23 @@ export class PatientService {
 
   static updatePatient = async (id: string, request: UpdatePatientValidator) => {
     try {
+      const {first_name,surname, email,password,} = request;
+      let existingPatient;
+      if (email) {
+        existingPatient = await PatientRepository.fetchPatientByEmail(email);
+      } else {
+        existingPatient = await PatientRepository.fetchPatientById(id);
+      }
+      if (!existingPatient) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Patient not found');
+      }
+      const user = await UserRepository.updateUser(existingPatient.user_id, first_name, surname, email, password);
+      if (!user) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Unable to update patient(user)');
+      }
       const patient = await PatientRepository.updatePatient(id, request);
       if (!patient) {
-        throw new ApiError(StatusCodes.NOT_FOUND, 'Patient not found');
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Unable to update patient');
       }
       return patient;
     } catch (error) {
@@ -102,6 +116,10 @@ export class PatientService {
 
   static deletePatient = async (id: string) => {
     try {
+      const user = await UserRepository.deleteUser(id);
+      if (!user) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+      }
       const patient = await PatientRepository.deletePatient(id);
       if (!patient) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Patient not found');

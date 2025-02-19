@@ -8,4 +8,5 @@ CREATE TABLE medical_history (
     treatment_plan TEXT,  -- Optional field for planned treatments
     notes TEXT,  -- Additional details
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    deleted_at TIMESTAMP
 );

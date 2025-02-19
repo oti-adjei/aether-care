@@ -11,7 +11,10 @@ const _logger = new Logger('Meidcal History');
 export class DoctorNoteRepository {
   static async createDoctorNote(patientId: string, doctorId: string, note: string,iv: string) {
     try {
-      const doctorNote = await sqlQuest.one(doctorNoteQueries.createDoctorNote, [patientId, doctorId, note,iv]);
+      if(!iv){
+        iv = 'For testing only';
+      }
+      const doctorNote = await sqlQuest.one(doctorNoteQueries.createDoctorNote, [ doctorId, patientId, note,iv]);
       return doctorNote;
     } catch (error) {
       _logger.error('[DoctorNoteRepository]::Something went wrong when creating doctor note', error);

@@ -111,7 +111,7 @@ export class AdminController {
     try {
       const { admin_id } = deleteAdminSchema.parse(req.params);
 
-      await AdminService.deleteAdmin(parseInt(admin_id));
+      await AdminService.deleteAdmin((admin_id));
       const response = new ResponseHandler(req, res);
       response.success({
         message: 'Admin deleted successfully',

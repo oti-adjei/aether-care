@@ -47,7 +47,7 @@ router.get(
 
 router.post(
   '/',
-  getUserverifyToken,
+  // getUserverifyToken,
   validateRequest(createDoctorNoteSchema),
   tryCatch(DoctorNotesController.createDoctorNote),
 );
@@ -66,4 +66,4 @@ router.delete(
   tryCatch(DoctorNotesController.deleteDoctorNote),
 );
 
-export default router;
+export const doctorNoteRouter = router;

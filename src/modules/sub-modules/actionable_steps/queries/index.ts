@@ -10,7 +10,7 @@
 //   created_at TIMESTAMP DEFAULT NOW()
 // );
 export const actionableStepsQueries = {
-    createActionableStep: `INSERT INTO actionable_steps (patient_id, note_id, step_type, description, scheduled_for, completed) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+    createActionableStep: `INSERT INTO actionable_steps (patient_id, note_id, step_type, description, scheduled_for, completed,status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`,
     fetchActionableStep: `SELECT * FROM actionable_steps WHERE id = $1;`,
     fetchAllActionableSteps: `SELECT * FROM actionable_steps;`,
     fetchActionableStepsByPatient: `SELECT * FROM actionable_steps WHERE patient_id = $1;`,

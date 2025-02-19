@@ -7,5 +7,6 @@ CREATE TABLE actionable_steps (
     description TEXT NOT NULL,
     scheduled_for TIMESTAMP,
     completed BOOLEAN DEFAULT FALSE,
+    status VARCHAR(50) CHECK (status IN ('pending', 'completed', 'cancelled')),
     created_at TIMESTAMP DEFAULT NOW()
 );

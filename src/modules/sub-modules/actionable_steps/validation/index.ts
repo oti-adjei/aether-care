@@ -18,7 +18,10 @@ export const fetchActionableStepsByDoctorSchema = z.object({
 // Schema for creating an actionable step
 export const createActionableStepSchema = z.object({
   patient_id: z.string().uuid(),
-  doctor_id: z.string().uuid(),
+  doctor_id: z.string().uuid().optional(),
+  note_id:z.number().optional(),
+  step: z.string().min(1, "Description is required"),
+  step_type: z.enum(["checklist", "plan"]),
   description: z.string().min(1, "Description is required"),
   due_date: z.string().datetime().optional(),
   status: z.enum(["pending", "completed", "cancelled"]).default("pending"),
@@ -27,7 +30,7 @@ export const createActionableStepSchema = z.object({
 // Schema for updating an actionable step
 export const updateActionableStepSchema = z.object({
   step_id: z.string().uuid(),
-  description: z.string().optional(),
+  step: z.string().optional(),
   due_date: z.string().datetime().optional(),
   status: z.enum(["pending", "completed", "cancelled"]).optional(),
 });

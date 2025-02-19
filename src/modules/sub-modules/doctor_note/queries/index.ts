@@ -1,5 +1,5 @@
 export const doctorNoteQueries = {
-    createDoctorNote: `INSERT INTO doctor_notes (doctor_id, patient_id, note, iv) VALUES ($1, $2, $3, $4) RETURNING *;`,
+    createDoctorNote: `INSERT INTO doctor_notes (doctor_id, patient_id, encrypted_notes, iv) VALUES ($1, $2, $3, $4) RETURNING *;`,
     fetchDoctorNote: `SELECT * FROM doctor_notes WHERE id = $1;`,
     fetchDOctorNotesByPatient: `SELECT * FROM doctor_notes WHERE patient_id = $1;`,
     fetchAllDoctorNotes: `SELECT * FROM doctor_notes;`,

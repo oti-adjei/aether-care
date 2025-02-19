@@ -1,6 +1,6 @@
 
 import { StatusCodes } from 'http-status-codes';
-import { ApiError } from 'src/shared/utils/api.error';
+import { ApiError } from '../../../../shared/utils/api.error';
 import { ActionableStepsRepository } from '../repository';
 import Logger from '../../../../config/logger';
 
@@ -8,12 +8,19 @@ const _logger = new Logger('Meidcal History');
 export class ActionableStepsService {
   static createActionableStep = async (payload:any) => {
     try {
-      const {patientId,doctorId,stepDetails} = payload;
-      const step = await ActionableStepsRepository.createActionableStep(patientId, doctorId, stepDetails);
-      if (!step) {
+      //TODO: Test with notes included
+      const {patient_id,note_id,step_type,description,due_date,status} = payload;
+
+      //print all values
+      console.log("======SERVICE VALUES======");
+      console.log(patient_id, note_id, step_type, description, due_date, status);
+
+
+      const stepp = await ActionableStepsRepository.createActionableStep(patient_id, note_id, step_type,description, due_date, status);
+      if (!stepp) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create actionable step');
       }
-      return step;
+      return stepp;
     } catch (error) {
       _logger.error('[ActionableStepsService]::Error creating actionable step', error);
       throw error;

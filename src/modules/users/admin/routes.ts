@@ -11,14 +11,12 @@ const { validateRequest } = ValidationMiddleware;
 
 
 router.get(
-  '/all/users',
+  '/all/',
   tryCatch(AdminController.fetchAllAdmins),
 );
 
-
-
 router.post(
-  '/users',
+  '/',
   validateRequest(createAdminSchema),
   tryCatch(AdminController.createAdmin),
 );
@@ -30,22 +28,22 @@ router.get(
 );
 
 router.get(
-  '/:id',
+  '/:admin_id',
   validateRequest(fetchAdminByIdSchema),
   tryCatch(AdminController.fetchAdmin),
 );
 
 router.put(
-  '/:id',
+  '/:admin_id',
   validateRequest(updateAdminSchema),
   tryCatch(AdminController.updateAdmin),
 );
 
 router.delete(
-  '/:id',
+  '/:admin_id',
   validateRequest(deleteAdminSchema),
   tryCatch(AdminController.deleteAdmin),
 );
 
 
-export const userRouter = router;
+export const adminRouter = router;

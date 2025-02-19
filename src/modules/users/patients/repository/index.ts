@@ -16,8 +16,8 @@ export class PatientRepository {
   // created_at TIMESTAMP DEFAULT NOW()
   static async createPatient(user_id:string,request : CreatePatientValidator) {
     try {
-      const {date_of_birth,medical_history} = request;
-      const patient = await sqlQuest.one(patientQueries.createPatient, [user_id,date_of_birth,medical_history]);
+      const {date_of_birth,medical_history,gender} = request;
+      const patient = await sqlQuest.one(patientQueries.createPatient, [user_id,date_of_birth,medical_history,gender]);
       return patient;
     } catch (error) {
       _logger.error('[PatientRepository]::Something went wrong when creating patient', error);
@@ -57,8 +57,8 @@ export class PatientRepository {
 
   static async updatePatient(user_id:string,request : UpdatePatientValidator) {
     try {
-      const {date_of_birth,medical_history} = request;
-      const updatedPatient = await sqlQuest.one(patientQueries.updatePatient, [user_id,date_of_birth,medical_history]);
+      const {date_of_birth,medical_history,gender} = request;
+      const updatedPatient = await sqlQuest.one(patientQueries.updatePatient, [date_of_birth, medical_history, gender,user_id,]);
       return updatedPatient;
     } catch (error) {
       _logger.error('[PatientRepository]::Something went wrong when updating patient', error);

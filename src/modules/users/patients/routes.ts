@@ -10,13 +10,13 @@ const router = express.Router();
 const { validateRequest } = ValidationMiddleware;
 
 router.get(
-  '/:id',
+  '/:patient_id',
   validateRequest(fetchPatientByIdSchema),
   tryCatch(PatientController.fetchPatient),
 );
 
 router.get(
-  '/all/users',
+  '/all/',
   tryCatch(PatientController.fetchAllPatients),
 );
 
@@ -27,7 +27,7 @@ router.get(
 );
 
 router.post(
-  '/users',
+  '/',
   validateRequest(createPatientSchema),
   tryCatch(PatientController.createPatient),
 );
@@ -39,9 +39,9 @@ router.put(
 );
 
 router.delete(
-  '/:id',
+  '/:patient_id',
   validateRequest(deletePatientSchema),
   tryCatch(PatientController.deletePatient),
 );
 
-export const userRouter = router;
+export const patientRouter = router;
