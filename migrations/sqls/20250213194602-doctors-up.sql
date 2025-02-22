@@ -5,5 +5,6 @@ CREATE TABLE doctors (
     specialty VARCHAR(255),
     experience INTEGER CHECK (experience >= 0),
     license_number VARCHAR(50) UNIQUE NOT NULL,
+    totp_secret VARCHAR(255),
     created_at TIMESTAMP DEFAULT NOW()
 );

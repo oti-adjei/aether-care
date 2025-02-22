@@ -8,6 +8,7 @@ import { doctorNoteRouter } from '../../modules/sub-modules/doctor_note/routes';
 import { medicalHistoryRouter } from '../../modules/sub-modules/medical_history/routes';
 import { assignmentsRouter } from '../../modules/sub-modules/patient_doctor_asign/routes';
 import { visitLogsRouter } from '../../modules/visit_log/routes';
+import { authenticationRouter } from '../../modules/authentication/routes';
 
 
 
@@ -22,6 +23,8 @@ appRouter.use('/medical-history', medicalHistoryRouter);
 appRouter.use('/assignments', assignmentsRouter);
 appRouter.use('/visit_logs', visitLogsRouter);
 appRouter.use('/actionable-steps', actionableStepsRouter);
+
+appRouter.use('/auth',authenticationRouter)
 
 
 export const Router = appRouter;

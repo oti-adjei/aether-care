@@ -10,7 +10,7 @@ const router = express.Router();
 const { validateRequest } = ValidationMiddleware;
 
 router.post(
-  '/signup',
+  '/register',
   validateRequest(loginValidator),
   tryCatch(AuthController.signup),
 );
@@ -33,3 +33,5 @@ router.post(
   validateRequest(loginValidator),
   tryCatch(AuthController.login),
 );
+
+export const authenticationRouter = router;

@@ -4,6 +4,7 @@ import { DoctorRepository } from '../repository';
 import { StatusCodes } from 'http-status-codes';
 import { CreateDoctorValidator, UpdateDoctorValidator } from '../validation';
 import { UserRepository } from '../../user/repository';
+import { GenericHelper } from '../../../../shared/helpers/generic.helper';
 // import {
 //   sanitizeInput,
 //   NullableString,
@@ -64,12 +65,20 @@ export class DoctorService {
 
   static createDoctor = async (request: CreateDoctorValidator) => {
     try {
-      const { first_name,surname,email,specialty,password,experience,license_number } = request;
+      const { first_name,surname,email,specialty,experience,license_number } = request;
+      let { password } = request;
       const existingDoctor = await DoctorRepository.checkIfDoctorExists(email);
 
       if (existingDoctor) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Doctor already exists');
       }
+
+      //hash password
+      const salt = await GenericHelper.GenerateSalt();
+
+          const HashedPassword = await GenericHelper.GeneratePasswordHash(password, salt);
+
+          password = HashedPassword
 
       //create User first
       const user = await UserRepository.createUser(first_name,surname, email, password, 'doctor');

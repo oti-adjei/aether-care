@@ -1,6 +1,6 @@
 export const authQueries = {
-     getTotpSecret : 'SELECT totp_secret FROM users WHERE id = $1;',
-     saveTotpSecret :'UPDATE users SET totp_secret = $1 WHERE id = $2;',
+     getTotpSecret : 'SELECT totp_secret FROM doctors WHERE user_id = $1;',
+     saveTotpSecret :'UPDATE doctors SET totp_secret = COALESCE($2, totp_secret) WHERE user_id = $1;',
       fetchUser: 'SELECT * FROM personal WHERE id = $1',
       storeGhanaCard: 'UPDATE personal SET ghana_card_images = COALESCE($2::jsonb, ghana_card_images) WHERE id = $1 RETURNING *',
        //fetchAllUsers :`SELECT * FROM personal;`,

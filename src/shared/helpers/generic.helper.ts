@@ -14,7 +14,7 @@ import { ApiError } from '../utils/api.error';
 import { StatusCodes } from 'http-status-codes';
 import axios from 'axios';
 import { UserQueries } from '../../modules/users/user/queries';
-import { AuthRepository } from 'src/modules/authentication/repository';
+import { AuthRepository } from '../../modules/authentication/repository';
 //import Env from '../utils/env';
 
 const _logger = new Logger('GenericHelper');

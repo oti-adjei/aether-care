@@ -4,6 +4,7 @@ import { PatientRepository } from '../repository';
 import { StatusCodes } from 'http-status-codes';
 import { CreatePatientValidator, UpdatePatientValidator } from '../validation';
 import { UserRepository } from '../../user/repository';
+import { GenericHelper } from '../../../../shared/helpers/generic.helper';
 // import {
 //   sanitizeInput,
 //   NullableString,
@@ -65,11 +66,18 @@ export class PatientService {
 
   static createPatient = async (request: CreatePatientValidator) => {
     try {
-      const { first_name, surname, email, password } = request;
+      const { first_name, surname, email } = request
+      let {password} = request
       const existingPatient = await PatientRepository.fetchPatientByEmail(request.email);
       if (existingPatient) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Patient with email already exists');
       }
+
+      const salt = await GenericHelper.GenerateSalt();
+
+      const HashedPassword = await GenericHelper.GeneratePasswordHash(password, salt);
+
+      password = HashedPassword;
       const user = await UserRepository.createUser(first_name, surname, email, password,'patient');
 
       if (!user) {

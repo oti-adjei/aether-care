@@ -2,22 +2,22 @@ import { ApiError } from '../../../shared/utils/api.error';
 import Logger from '../../../config/logger';
 import { AuthRepository } from '../repository';
 import { StatusCodes } from 'http-status-codes';
-import { UserRepository } from 'src/modules/users/user/repository';
-import { GenericHelper } from 'src/shared/helpers/generic.helper';
-import Env from 'src/shared/utils/env';
+import { UserRepository } from '../../users/user/repository';
+import { GenericHelper } from '../../../shared/helpers/generic.helper';
+import Env from '../../../shared/utils/env';
 import { LoginValidator, SendPhoneNumberOtpValidator, VerifyPhoneNumberOtpValidator } from '../validation';
-import * as jwt from 'jsonwebtoken';
+
 
 
 const _logger = new Logger('AuthService');
 export class AuthService {
 
-    static async getTotpSecret(userId: number): Promise<string | null> {
+    static async getTotpSecret(userId: string): Promise<string | null> {
       try{
        const secret =  await AuthRepository.getTotpSecret(userId);
-       if(!secret){
-        throw new ApiError(StatusCodes.NOT_FOUND, 'No totp secret found');
-       }
+      //  if(!secret){
+      //   throw new ApiError(StatusCodes.NOT_FOUND, 'No totp secret found');
+      //  }
        return secret;
       } catch (error) {
         _logger.error('[AuthService]::Error fetching totp secret', error);
@@ -25,10 +25,12 @@ export class AuthService {
       }
     }
     
-      static async saveTotpSecret(userId: number, secret: string){
+      static async saveTotpSecret(userId: string, secret: string){
         try{
+
+          
           const result = await AuthRepository.saveTotpSecret(userId, secret);
-          if(!result){
+          if(result !== null){
             throw new ApiError(StatusCodes.NOT_FOUND, 'No totp secret found');
           }
           return result;
@@ -56,19 +58,11 @@ export class AuthService {
             throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid password');
           }
     
-          const token = jwt.sign(
-            {
-              id: user.id,
-              email: user.email,
-              name: user.name,
-            },
-            Env.get('ENVOYER_SECRET') as string,
-            { expiresIn: '1d', algorithm: 'HS256' },
-          );
+         
     
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { password: _, ...userDetails } = user;
-          return { ...userDetails, token };
+          return {...userDetails};
         } catch (err) {
           _logger.error('[UserService]::Something went wrong when logging in');
           throw err;

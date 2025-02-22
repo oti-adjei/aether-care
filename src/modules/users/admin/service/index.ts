@@ -4,6 +4,7 @@ import { AdminRepository } from '../repository';
 import { StatusCodes } from 'http-status-codes';
 import { CreateAdminValidator, UpdateAdminValidator, } from '../validation';
 import { UserRepository } from '../../user/repository';
+import { GenericHelper } from '../../../../shared/helpers/generic.helper';
 // import {
 //   sanitizeInput,
 //   NullableString,
@@ -70,12 +71,20 @@ export class AdminService {
         surname,
         email,
         // phone,
-        password,
+        
       } = request;
+      let { password } = request;
       const existingAdmin = await AdminRepository.fetchAdminByEmail(request.email);
       if (existingAdmin) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Admin with email already exists');
       }
+
+      const salt = await GenericHelper.GenerateSalt();
+
+      const HashedPassword = await GenericHelper.GeneratePasswordHash(password, salt);
+
+      password = HashedPassword;
+      _logger.log('[AdminService]::Creating admin', password);
       const user = await UserRepository.createUser(first_name,surname, email, password, 'admin');
       
       if (!user) {

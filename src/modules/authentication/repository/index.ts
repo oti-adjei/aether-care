@@ -9,20 +9,29 @@ const _logger = new Logger('AuthRepository');
 
 export class AuthRepository {
 
-    static async getTotpSecret(userId: number): Promise<string | null> {
+    static async getTotpSecret(userId: string): Promise<string | null> {
       try{
         const result = await sqlQuest.one(authQueries.getTotpSecret, [userId]);
 
-        return result.rows.length ? result.rows[0].totp_secret : null;
+           // Check if result is defined AND if it has a rows property
+    if (result && result.rows && result.rows.length > 0) {
+      return result.rows[0].totp_secret;
+    } else {
+      return null; // Or throw an error if you expect a secret to always exist
+    }
+
       }catch(error){
         _logger.error('[AuthRepository]::Error fetching totp secret', error);
         throw error;
       }
     }
     
-      static async saveTotpSecret(userId: number, secret: string) {
+      static async saveTotpSecret(userId: string, secret: string) {
         try{
-       const result = await sqlQuest.one(authQueries.saveTotpSecret, [secret, userId]);
+          console.log('secret and user is ', secret, userId);
+       const result = await sqlQuest.oneOrNone(authQueries.saveTotpSecret, [ userId,secret]);
+
+       console.log('result is ', result);
 
         return result;
       } catch (error) {
