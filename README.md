@@ -1,34 +1,28 @@
+
 # Aethercare API
 
-Aethercare is a healthcare management API that facilitates user management, patient records, medical history, doctor notes, visit logs, and more. This documentation provides an overview of the API, setup instructions, and endpoint details.
+Aethercare is a healthcare management API. This README provides a quick overview of the API and setup instructions. For detailed documentation, please refer to the [AetherCare Wiki](https://github.com/oti-adjei/aether-care/wiki).
 
 ## Table of Contents
+
 - [Getting Started](#getting-started)
 - [Authentication](#authentication)
 - [Environments](#environments)
 - [Endpoints](#endpoints)
-  - [Auth](#auth)
-  - [Users](#users)
-  - [Doctors](#doctors)
-  - [Patients](#patients)
-  - [Admins](#admins)
-  - [Medical History](#medical-history)
-  - [Doctor Notes](#doctor-notes)
-  - [Patient-Doctor Assignments](#patient-doctor-assignments)
-  - [Visit Logs](#visit-logs)
-  - [Actionable Steps](#actionable-steps)
 - [Postman Collection](#postman-collection)
-- [Checklist](#checklist)
 - [License](#license)
 
 ## Getting Started
+
 ### Prerequisites
+
 - Node.js
 - PostgreSQL
 - Postman (for testing)
 - `.env` file with necessary environment variables
 
 ### Installation
+
 ```sh
 # Clone the repository
 git clone https://github.com/your-repo/aethercare.git
@@ -40,90 +34,92 @@ npm install
 # Run the application
 npm run dev
 ```
-
 ### Environment Variables
-Create a `.env` file and include the following:
-```
-DATABASE_URL=your_database_url
-JWT_SECRET=your_jwt_secret
-PORT=your_port
-```
 
-## Authentication
-Aethercare API uses token-based authentication. Each request must include a valid JWT token in the Authorization header:
+Create a .env file and include the following:
+```
+AETHERCARE_NODE_ENV=development
+AETHERCARE_PORT=4000
+AETHERCARE_DATABASE_URL=
+AETHERCARE_API_VERSION=
+APP_NAME=AetherCare
+AETHERCARE_SALT_ROUNDS=
+AETHERCARE_SECRET=
+AETHERCARE_DOMAIN=localhost
+MNOTIFY_ENDPOINT=
+MNOTIFY_API_KEY=
+ENCRYPTION_KEY=
+LLM_API_KEY=
+```
+### Authentication
+
+Aethercare API uses token-based authentication. See the Authentication & Security section in the Wiki for details. Replace link-to-wiki-auth-section with the actual anchor link to that section in the Wiki. Each request must include a valid JWT token in the Authorization header:
 ```
 Authorization: Bearer <token>
 ```
 
-### Token Expiration & Refresh
-- Tokens expire after a set duration (e.g., 24 hours).
-- Refresh tokens allow users to obtain a new token without logging in again.
+### Environments
 
-## Environments
 The API supports different environments:
-- **Development**: `https://api.dev.aethercare.com`
-- **Staging**: `https://api.staging.aethercare.com`
-- **Production**: `https://api.aethercare.com`
 
-## Endpoints
+Development: https://api.dev.aethercare.com
 
-### Auth
-- **POST /auth/register** – Register a new user
-- **POST /auth/login** – Authenticate and receive a token
-- **POST /auth/logout** – Logout a user
-- **POST /auth/refresh** – Refresh authentication token
+Staging: https://api.staging.aethercare.com
 
-### Users
-- **GET /users** – Fetch all users
-- **GET /users/{id}** – Fetch a specific user
-- **PUT /users/{id}** – Update user details
-- **DELETE /users/{id}** – Soft delete a user
-- **POST /users/restore/{id}** – Restore a soft-deleted user
+Production: https://api.aethercare.com
 
-### Doctors
-- **GET /doctors** – List all doctors
-- **POST /doctors** – Register a new doctor
-- **GET /doctors/{id}** – Fetch a specific doctor
-- **PUT /doctors/{id}** – Update doctor details
+Endpoints
 
-### Patients
-- **GET /patients** – List all patients
-- **POST /patients** – Register a new patient
-- **GET /patients/{id}** – Fetch a specific patient
-- **PUT /patients/{id}** – Update patient details
+For a complete list of API endpoints and their details, including request/response examples and authentication requirements, please refer to the API Endpoints section in the Wiki. Replace link-to-wiki-endpoints-section with the actual anchor link to that section in the Wiki.
 
-### Admins
-- **GET /admins** – List all admins
-- **POST /admins** – Register a new admin
-- **GET /admins/{id}** – Fetch a specific admin
+#### Auth:
 
-### Medical History
-- **GET /medical-history/{patientId}** – Get medical history for a patient
-- **POST /medical-history** – Add medical history entry
-- **PUT /medical-history/{id}** – Update medical history
+- **POST /auth/register**
 
-### Doctor Notes
-- **GET /doctor-notes/{doctorId}** – Get doctor notes
-- **POST /doctor-notes** – Add a note
-- **DELETE /doctor-notes/{id}** – Delete a note
+- **POST /auth/login**
 
-### Patient-Doctor Assignments
-- **POST /assignments** – Assign a doctor to a patient
-- **GET /assignments/{patientId}** – View a patient’s assigned doctor
+- **POST /auth/logout**
 
-### Visit Logs
-- **GET /visit-logs** – View all visit logs
-- **POST /visit-logs** – Create a new visit log
-- **GET /visit-logs/{id}** – View a specific visit log
+- **POST /auth/refresh**
 
-### Actionable Steps
-- **GET /actionable-steps** – Get all actionable steps
-- **POST /actionable-steps** – Create a new actionable step
-- **DELETE /actionable-steps/{id}** – Delete an actionable step
+#### Medical History:
+
+- **GET /medical-history/{patientId}**
+
+- **POST /medical-history**
+
+- **PUT /medical-history/{id}**
+
+#### Doctor Notes:
+
+- **GET /doctor-notes/{doctorId}**
+
+- **POST /doctor-notes**
+
+- **DELETE /doctor-notes/{id}**
+
+#### Patient-Doctor Assignments:
+
+- **POST /assignments**
+
+- **GET /assignments/{patientId}**
+
+#### Actionable Steps:
+
+- **GET /actionable-steps**
+
+- **POST /actionable-steps**
+
+- **DELETE /actionable-steps/{id}**
 
 ## Postman Collection
-To facilitate API testing, use the **Aethercare Postman Collection**:
-[Download Aethercare.postman_collection.json](sandbox:/mnt/data/Aethercare.postman_collection.json)
+To facilitate API testing, use the **Aethercare Postman Collection**. This collection is pre-configured with environments for 
+- **Beta (Development)**
+- **Staging**
+- **Production**
+
+This allows you to easily switch between different API endpoints.
+[View Aethercare Postman](https://www.postman.com/chingu-v47-team28/workspace/aethercare/collection/15310325-5d8dcb60-3116-433d-a840-e04e7abaab20?action=share&creator=15310325&active-environment=15310325-5e31c593-f1a6-4648-be8a-fdf23489fc63)
 ## Checklist
 
 ### File Setup
