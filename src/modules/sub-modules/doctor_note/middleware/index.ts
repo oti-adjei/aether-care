@@ -70,8 +70,14 @@ interface LLMResponse {
   plan: { description: string; due_date: string | null; }[];
 }
 
-async function extractActionableSteps(noteText: string, apiKey: string): Promise<LLMResponse> {
-  const apiUrl = 'YOUR_LLM_API_ENDPOINT'; // Replace with the actual API endpoint
+async function extractActionableSteps(noteText: string): Promise<LLMResponse> {
+  const apiKey = process.env.LLM_API_KEY; // Your Gemini API key from environment variables
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`; // URL with API key as query parameter
+
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY environment variable is not set.");
+  }
+
   const prompt = `
     Analyze the following doctor's note and extract actionable steps for the patient.
 
@@ -97,21 +103,58 @@ async function extractActionableSteps(noteText: string, apiKey: string): Promise
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`, // Or however the LLM API requires authentication
+        'Content-Type': 'application/json', // Important for Gemini API
       },
-      body: JSON.stringify({ prompt: prompt }),
+      body: JSON.stringify({
+        "contents": [{
+          "parts": [{"text": prompt}] // Use the prompt in the correct structure
+        }]
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`LLM API error: ${response.status} ${response.statusText}`);
+      const errorData = await response.json(); // Try to get error details from the API
+      throw new Error(`LLM API error: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`); // Include details
     }
 
     const data = await response.json();
-    return data as LLMResponse;
+    console.log("LLM Response:", JSON.stringify(data, null, 2)); // Pretty print the JSON
+    // 1. Access the text field:
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!text) {
+      throw new Error("Invalid LLM response: Missing text field.");
+    }
+
+    // 1. Extract the JSON part (more robust):
+    const jsonStart = text.indexOf('```json');
+    const jsonEnd = text.lastIndexOf('```');
+
+    if (jsonStart === -1 || jsonEnd === -1) {
+      console.error("Could not find JSON delimiters in LLM response:", text); // Log the raw text
+      throw new Error("Invalid LLM response: Could not find JSON delimiters.");
+    }
+
+    const jsonString = text.substring(jsonStart + 7, jsonEnd).trim(); // +7 to remove ```json\n, .trim to remove any whitespace
+    // 2. Parse the JSON string:
+    try {
+
+      const actionableSteps = JSON.parse(jsonString);
+      console.log('parsed', actionableSteps)
+      const checklist = actionableSteps?.checklist ?? [];
+      const plan = actionableSteps?.plan ?? [];
+
+      if (!checklist || !plan) {
+        throw new Error("Invalid LLM response: Missing checklist or plan");
+      }
+      return { ...data, checklist, plan } as LLMResponse;
+    } catch (parseError) {
+      console.error("Error parsing LLM JSON:", parseError, text); // Log the raw text for debugging
+      throw new Error("Invalid LLM response: Could not parse JSON.");
+    }
   } catch (error) {
     _logger.error('Error calling LLM API:', error);
-    throw error; // Re-throw the error for handling upstream
+    throw error;
   }
 }
 

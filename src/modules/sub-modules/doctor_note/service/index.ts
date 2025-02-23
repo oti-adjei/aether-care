@@ -101,7 +101,7 @@ export class DoctorNoteService {
           _logger.error('[DoctorNoteService]::LLM_API_KEY environment variable is not set');
           throw new Error('LLM_API_KEY environment variable is not set');
         }
-        const llmResponse = await extractActionableSteps(decryptedText, llmApiKey);
+        const llmResponse = await extractActionableSteps(decryptedText);
 
            // Validate the LLM response structure
         if (!llmResponse || !llmResponse.checklist || !llmResponse.plan) {

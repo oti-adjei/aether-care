@@ -18,5 +18,6 @@ export const actionableStepsQueries = {
     updateActionableStep: `UPDATE actionable_steps SET description = $1, scheduled_for = $2 WHERE id = $3 RETURNING *;`,
     deleteActionableStep: `UPDATE actionable_steps SET deleted_at = NOW() WHERE id = $1 RETURNING *;`,
     restoreActionableStep: `UPDATE actionable_steps SET deleted_at = NULL WHERE id = $1 RETURNING *;`,
-    cancelActionableStepsByPatientId: `UPDATE actionable_steps SET is_cancelled = TRUE WHERE patient_id = $1;`
+    //cancel Actinoable Step by setting statusfields with null or pending to cancelled
+    cancelActionableStepsByPatientId: `UPDATE actionable_steps SET status = 'cancelled' WHERE patient_id = $1 AND status IN (NULL, 'pending') RETURNING *;`
   };
