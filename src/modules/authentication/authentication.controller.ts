@@ -73,6 +73,8 @@ export class AuthController {
       if (user.role === 'doctor') {
         _logger.log('[UserController]::User is a doctor');
         const userTotpSecret = await AuthService.getTotpSecret(user.user_id);
+
+        console.log('userTotpSecret',userTotpSecret);
   
         if (userTotpSecret === null) {
           // Step 3: First-time setup → Generate QR code for the user
@@ -135,21 +137,31 @@ export class AuthController {
 
   static verifyTOTP = async (req: Request, res: Response) => {
     try {
-      const { user_id, totpCode } = req.body;
+      const { user_id } = req.body;
+      let { totpCode } = req.body;
+
+      // totpCode = totpCode.trim();
   
       // Fetch user’s stored TOTP secret
       const user = await DoctorService.fetchDoctor(user_id);
-      if (!user || !user.totpSecret) {
+
+      console.log('user is ', user);
+      if (!user || !user.totp_secret) {
         return res.status(400).json({ message: "User or TOTP secret not found" });
       }
+
+
+      console.log('totpCode is ', totpCode);
   
       // Verify TOTP code
       const isValid = speakeasy.totp.verify({
-        secret: user.totpSecret,
+        secret: user.totp_secret,
         encoding: "base32",
         token: totpCode,
         window: 1, // Allows slight time drift
       });
+
+      console.log('isValid is ', isValid);
   
       if (!isValid) {
         return res.status(401).json({ message: "Invalid TOTP code" });

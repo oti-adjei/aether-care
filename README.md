@@ -127,99 +127,100 @@ To facilitate API testing, use the **Aethercare Postman Collection**:
 
 ## Checklist
 ### File Setup
-- [ ] Create the project structure
-- [ ] Setup `.env` file and environment variables
-- [ ] Configure TypeScript and tsconfig
-- [ ] Install dependencies (Express, Zod, PostgreSQL, etc.)
-- [ ] Setup database connection and migrations
+- [x] Create the project structure
+- [x] Setup `.env` file and environment variables
+- [x] Configure TypeScript and tsconfig
+- [x] Install dependencies (Express, Zod, PostgreSQL, etc.)
+- [x] Setup database connection and migrations
 - [ ] Seed initial data if necessary
 
 ### Authentication Module
-- [ ] Implement Auth Routes
-- [ ] Implement Auth Controller
-- [ ] Implement Auth Service
-- [ ] Implement User Repository
-- [ ] Implement Query Layer for Auth
+- [x] Implement Auth Routes
+- [x] Implement Auth Controller
+- [x] Implement Auth Service
+- [x] Implement User Repository
+- [x] Implement Query Layer for Auth
+- [x] Implement TOTP for Doctor Login
 - [ ] Implement Token Expiry & Refresh Mechanism
 - [ ] Write tests for Auth routes
 
 ### User Module
-- [ ] Implement User Routes
-- [ ] Implement User Controller
-- [ ] Implement User Service
-- [ ] Implement User Repository
-- [ ] Implement Query Layer for Users
+- [x] Implement User Routes
+- [x] Implement User Controller
+- [x] Implement User Service
+- [x] Implement User Repository
+- [x] Implement Query Layer for Users
 - [ ] Write tests for User routes
 
 ### Doctors Module
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Patient Module
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Admin Module
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Medical History
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Doctor Note
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Patient-Doctor Assignment
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Visit Log 
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 ### Actionable Steps
-- [ ] Implement Routes
-- [ ] Implement Controllers
-- [ ] Implement Services
-- [ ] Implement Repositories
-- [ ] Implement Query Layers
+- [x] Implement Routes
+- [x] Implement Controllers
+- [x] Implement Services
+- [x] Implement Repositories
+- [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
 
 
 ### Final Steps
 - [ ] Verify API endpoints with Postman
-- [ ] Check database queries and migrations
+- [x] Check database queries and migrations
 - [ ] Deploy and test in staging environment
 - [ ] Final review and documentation updates
 

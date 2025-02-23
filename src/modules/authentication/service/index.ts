@@ -12,13 +12,15 @@ import { LoginValidator, SendPhoneNumberOtpValidator, VerifyPhoneNumberOtpValida
 const _logger = new Logger('AuthService');
 export class AuthService {
 
-    static async getTotpSecret(userId: string): Promise<string | null> {
+    static async getTotpSecret(userId: string) {
       try{
-       const secret =  await AuthRepository.getTotpSecret(userId);
+       const totpsecret =  await AuthRepository.getTotpSecret(userId);
       //  if(!secret){
       //   throw new ApiError(StatusCodes.NOT_FOUND, 'No totp secret found');
       //  }
-       return secret;
+
+      console.log('totpsecret is ', totpsecret);
+       return totpsecret;
       } catch (error) {
         _logger.error('[AuthService]::Error fetching totp secret', error);
         throw error;

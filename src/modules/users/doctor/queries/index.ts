@@ -1,6 +1,6 @@
 export const doctorQueries = {
   createDoctor: `INSERT INTO doctors (user_id, specialty, experience, license_number) VALUES ($1, $2, $3, $4) RETURNING *;`,
-  fetchDoctor: `SELECT d.* FROM doctors d INNER JOIN users u ON d.user_id = u.user_id WHERE u.user_id = $1;`,
+  fetchDoctor: `SELECT d.* FROM doctors d INNER JOIN users u ON d.user_id = u.user_id WHERE u.user_id = $1`,
   // fetchDoctorByEmail: `SELECT * FROM doctors WHERE email = $1;`,
   fetchDoctorByEmail: `SELECT d.* FROM doctors d INNER JOIN users u ON d.user_id = u.user_id WHERE u.email = $1;`,
   fetchAllDoctors: `SELECT * FROM doctors;`,

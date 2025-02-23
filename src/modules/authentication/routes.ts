@@ -1,6 +1,6 @@
 import express from 'express';
 import { ValidationMiddleware } from '../../shared/validators/middleware';
-import { loginValidator, sendPhoneNumberOtpValidator, verifyPhoneNumberOtpValidator, } from './validation';
+import { loginValidator, sendPhoneNumberOtpValidator, verifyPhoneNumberOtpValidator, verifyTotp, } from './validation';
 import { tryCatch } from '../../shared/helpers/try.catch.helper';
 import {getUserverifyToken } from "./middleware/verifytoken";
 import { AuthController } from './authentication.controller';
@@ -20,6 +20,13 @@ router.post(
   validateRequest(sendPhoneNumberOtpValidator),
   tryCatch(AuthController.sendPhoneNumberOtp),
 );
+
+//verify totp
+router.post(
+  '/verify/totp',
+  validateRequest(verifyTotp),
+  tryCatch(AuthController.verifyTOTP),
+)
 
 router.post(
   '/send/verify-otp',

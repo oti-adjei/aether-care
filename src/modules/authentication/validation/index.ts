@@ -30,6 +30,11 @@ export const loginValidator = z.object({
   password: z.string()
 });
 
+export const verifyTotp = z.object({
+  user_id:z.string(),
+  totpCode:z.number(),
+});
+
 
 export const verifyPhoneNumberOtpValidator = z.object({
   otp: z.number(),

@@ -3,7 +3,9 @@ import QRCode from 'qrcode';
 
 export class TotpHelper {
   static generateTotpSecret() {
-    const secret = speakeasy.generateSecret({ length: 20 });
+    const secret = speakeasy.generateSecret({ 
+      name: 'AetherCare',
+      length: 20 });
 
     return {
       secret: secret.base32,
