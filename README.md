@@ -124,8 +124,8 @@ The API supports different environments:
 ## Postman Collection
 To facilitate API testing, use the **Aethercare Postman Collection**:
 [Download Aethercare.postman_collection.json](sandbox:/mnt/data/Aethercare.postman_collection.json)
-
 ## Checklist
+
 ### File Setup
 - [x] Create the project structure
 - [x] Setup `.env` file and environment variables
@@ -135,12 +135,11 @@ To facilitate API testing, use the **Aethercare Postman Collection**:
 - [ ] Seed initial data if necessary
 
 ### Authentication Module
-- [x] Implement Auth Routes
+- [x] Implement Auth Routes (Signup, Login)  <!-- Updated to reflect core requirements -->
 - [x] Implement Auth Controller
 - [x] Implement Auth Service
 - [x] Implement User Repository
 - [x] Implement Query Layer for Auth
-- [x] Implement TOTP for Doctor Login
 - [ ] Implement Token Expiry & Refresh Mechanism
 - [ ] Write tests for Auth routes
 
@@ -168,62 +167,68 @@ To facilitate API testing, use the **Aethercare Postman Collection**:
 - [x] Implement Query Layers
 - [ ] Write Tests for all Routes
 
-### Admin Module
+### Patient-Doctor Assignment Module
 - [x] Implement Routes
 - [x] Implement Controllers
 - [x] Implement Services
 - [x] Implement Repositories
 - [x] Implement Query Layers
+- [ ] Implement Logic for Patient Doctor Selection
+- [ ] Doctors can see a list of patients who have selected them.
 - [ ] Write Tests for all Routes
 
-### Medical History
+### Doctor Notes Module
 - [x] Implement Routes
 - [x] Implement Controllers
 - [x] Implement Services
 - [x] Implement Repositories
 - [x] Implement Query Layers
+- [ ] Implement Note Submission logic
+- [ ] **Implement End-to-End Encryption for Doctor Notes (Client-Side)**  <!-- NEW -->
+    - [ ]  Generate Encryption Keys per Note (or User, depending on strategy)
+    - [ ]  Encrypt Note Content Before Sending to Backend
+    - [ ]  Securely Store/Manage Encryption Keys (Consider Key Rotation)
+    - [ ]  Decryption Logic on Client-Side (Doctor/Patient)
 - [ ] Write Tests for all Routes
 
-### Doctor Note
+### Actionable Steps Module
 - [x] Implement Routes
 - [x] Implement Controllers
 - [x] Implement Services
 - [x] Implement Repositories
 - [x] Implement Query Layers
+- [ ] Implement logic for retrieving actionable steps and reminders
 - [ ] Write Tests for all Routes
 
-### Patient-Doctor Assignment
-- [x] Implement Routes
-- [x] Implement Controllers
-- [x] Implement Services
-- [x] Implement Repositories
-- [x] Implement Query Layers
-- [ ] Write Tests for all Routes
+### LLM Integration & Dynamic Scheduling
+- [ ] **Implement LLM Integration Service** <!-- NEW -->
+    - [ ]  Connect to Live LLM (e.g., Google Gemini Flash)
+    - [ ]  Implement Function to Extract Checklist and Plan from Doctor Notes
+    - [ ] Handle LLM API Key Management Securely
+- [ ] **Implement Dynamic Scheduling Service** <!-- NEW -->
+    - [ ]  Schedule Reminders Based on LLM-Extracted Plan
+    - [ ]  Store Reminder Details (Patient ID, Task, Schedule)
+    - [ ]  Implement Logic to Handle Missed Check-ins (Extend Reminders)
+    - [ ]  Implement Logic to Cancel Existing Actionable Steps on New Note Submission
+- [ ] Implement Logic for retrieving actionable steps and reminders
 
-### Visit Log 
-- [x] Implement Routes
-- [x] Implement Controllers
-- [x] Implement Services
-- [x] Implement Repositories
-- [x] Implement Query Layers
-- [ ] Write Tests for all Routes
+### API Endpoints
+- [ ] **Implement Patient Doctor Selection Endpoint**
+- [ ] **Implement Doctor Retrieval of Patient List Endpoint**
+- [ ] **Implement Doctor Notes Submission Endpoint (with LLM Processing)**
+- [ ] **Implement Actionable Steps Retrieval Endpoint**
 
-### Actionable Steps
-- [x] Implement Routes
-- [x] Implement Controllers
-- [x] Implement Services
-- [x] Implement Repositories
-- [x] Implement Query Layers
-- [ ] Write Tests for all Routes
-
-
+### Security
+- [ ]  **Review and Harden API Endpoints against Common Vulnerabilities (OWASP Top 10)**
+- [ ]  Implement Rate Limiting to Prevent Abuse
+- [ ]  Audit Logging of Sensitive Actions
 
 ### Final Steps
 - [ ] Verify API endpoints with Postman
 - [x] Check database queries and migrations
 - [ ] Deploy and test in staging environment
 - [ ] Final review and documentation updates
-
+- [ ] **Write Integration Tests to Verify End-to-End Flow (Signup -> Note Submission -> Actionable Steps)** <!-- NEW -->
 ## License
 Aethercare API is open-source and available under the MIT License.
 
